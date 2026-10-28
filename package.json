@@ -1,0 +1,20 @@
+{
+  "name": "cube-studio",
+  "version": "1.0.0",
+  "private": true,
+  "license": "GPL-3.0-only",
+  "description": "个人魔方训练器：盲拧编码、图片记忆与 EOLR 识别练习",
+  "scripts": {
+    "start": "node scripts/dev.cjs",
+    "dev": "node scripts/dev.cjs",
+    "build": "node scripts/build.cjs",
+    "check": "node node_modules/typescript/bin/tsc --noEmit",
+    "test": "node --test tests/*.test.cjs"
+  },
+  "devDependencies": {
+    "typescript": "3.9.10"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

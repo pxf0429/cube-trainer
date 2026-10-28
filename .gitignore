@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.cache/
+*.log
+docs/preview-*.png
+docs/preview-*.jpg
+.env
+.env.*
