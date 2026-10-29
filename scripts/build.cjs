@@ -52,7 +52,9 @@ function build() {
     }
   }
   copyAssets(path.join(root, 'public'), output);
-  const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace('src="./app.js"', 'src="./app.js?v=' + buildVersion + '"');
+  const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8')
+    .replace('src="./app.js"', 'src="./app.js?v=' + buildVersion + '"')
+    .replace(/href="(\.\/[^"?]+\.css)"/g, (_, href) => 'href="' + href + '?v=' + buildVersion + '"');
   fs.writeFileSync(path.join(output, 'index.html'), index);
   for (const file of ['favicon.svg', 'LICENSE', 'NOTICE.md']) {
     if (fs.existsSync(path.join(root, file))) fs.copyFileSync(path.join(root, file), path.join(output, file));

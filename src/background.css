@@ -1,0 +1,11 @@
+body{min-height:100vh;background:linear-gradient(130deg,var(--background-start,#eef6ff),#fff 52%,var(--background-end,#fff1f7)) fixed}
+.studio-header{display:flex;align-items:flex-end;justify-content:space-between;gap:28px}
+.studio-intro>p{font-size:13px;line-height:2;color:var(--muted)}
+.background-settings{width:224px;flex:none;padding:14px 16px;background:#ffffffa8;border:1px solid #d9e5f3;border-radius:6px}
+.background-settings-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:11px;color:#5578a4}
+.background-settings-heading .text-button{font-size:10px;color:#7893b3}
+.background-colors{display:flex;gap:18px;margin-top:12px}
+.background-colors label{display:flex;align-items:center;gap:8px;color:#7189a8;font-size:11px;cursor:pointer}
+.background-colors input{width:30px;height:30px;padding:2px;border:1px solid #cfdfef;border-radius:5px;background:#fff;cursor:pointer}
+.background-colors input:focus-visible{outline:2px solid var(--pink);outline-offset:3px}
+@media(max-width:700px){.studio-header{align-items:stretch;flex-direction:column;gap:22px}.studio-intro>p{font-size:11px}.background-settings{width:100%;max-width:300px;padding:12px 14px}.background-colors{margin-top:10px}}

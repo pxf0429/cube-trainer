@@ -13,6 +13,22 @@ const learning = buildLearningGraph(cases, CATEGORIES);
 const orderedCases = [...cases].sort((a, b) => learning.order.indexOf(a.category) - learning.order.indexOf(b.category));
 const app = document.querySelector<HTMLDivElement>("#app")!;
 const STORAGE_KEY = "eolr-studio:v1";
+const BACKGROUND_KEY = "cube-studio:background:v1";
+const DEFAULT_BACKGROUND = { start: "#eef6ff", end: "#fff1f7" };
+let background = { ...DEFAULT_BACKGROUND };
+try {
+    const saved = JSON.parse(localStorage.getItem(BACKGROUND_KEY) || "null");
+    if (saved && /^#[0-9a-f]{6}$/i.test(saved.start) && /^#[0-9a-f]{6}$/i.test(saved.end)) background = { start: saved.start, end: saved.end };
+} catch { /* Use the default gradient if the setting cannot be read. */ }
+function applyBackground() {
+    document.body.style.setProperty("--background-start", background.start);
+    document.body.style.setProperty("--background-end", background.end);
+}
+function saveBackground() {
+    applyBackground();
+    try { localStorage.setItem(BACKGROUND_KEY, JSON.stringify(background)); }
+    catch { toast("背景颜色暂时无法保存。"); }
+}
 const entities: { [key: string]: string } = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
 const escape = (value: unknown) => String(value).replace(/[&<>"']/g, char => entities[char]);
 const newId = () => Array.from(crypto.getRandomValues(new Uint32Array(4)), value => value.toString(16).padStart(8, "0")).join("");
@@ -97,8 +113,12 @@ function sidebar() {
 }
 function homeView() {
     const stats = summarize(stored.attempts), memory = blindfold.stats;
-    return '<header class="studio-header"><div class="eyebrow">CUBE / TRAINING</div><h1>魔方训练器</h1>' +
-        '<p>选择训练项目</p></header>' +
+    return '<header class="studio-header"><div class="studio-intro"><div class="eyebrow">CUBE / TRAINING</div><h1>魔方训练器</h1>' +
+        '<p>选择训练项目</p></div><section class="background-settings" aria-label="背景颜色设置"><div class="background-settings-heading"><span>背景颜色</span>' +
+        '<button class="text-button" data-action="reset-background">恢复默认</button></div><div class="background-colors">' +
+        '<label><input type="color" data-background="start" value="' + escape(background.start) + '" aria-label="渐变起始颜色"><span>起始色</span></label>' +
+        '<label><input type="color" data-background="end" value="' + escape(background.end) + '" aria-label="渐变结束颜色"><span>结束色</span></label>' +
+        '</div></section></header>' +
         '<section class="training-modules" aria-label="选择训练项目"><article class="training-module eolr-module"><div class="training-module-top">' + icon("cube") + '<span>ROUX / LAST SIX EDGES</span></div>' +
         '<h2>EOLR<span>棱块识别</span></h2><p>判断 EO 大类与 LR 位置，练习51种情形。</p><div class="module-facts"><span><b>51</b> 种情形</span><span><b>' + stats.count +
         '</b> 今日已练</span></div><button data-module="eolr" class="outline-button">开始识别训练 ' + icon("arrow") + '</button></article>' +
@@ -423,6 +443,10 @@ function initializeWorker() {
 app.addEventListener("click", async event => {
     const target = (event.target as Element).closest<HTMLElement>("button, a[data-case-reference]");
     if (!target || target.hasAttribute("disabled")) return;
+    if (target.dataset.action === "reset-background") {
+        background = { ...DEFAULT_BACKGROUND }; saveBackground(); render();
+        app.querySelector<HTMLElement>('[data-action="reset-background"]')?.focus(); return;
+    }
     if (target.dataset.module) {
         const nextModule = target.dataset.module as typeof trainingModule;
         if (nextModule === trainingModule) return;
@@ -518,8 +542,12 @@ app.addEventListener("click", async event => {
     }
 });
 app.addEventListener("change", async event => {
-    if (trainingModule !== "eolr") return;
     const input = event.target as HTMLInputElement;
+    if (input.dataset.background === "start" || input.dataset.background === "end") {
+        if (/^#[0-9a-f]{6}$/i.test(input.value)) { background[input.dataset.background] = input.value; saveBackground(); }
+        return;
+    }
+    if (trainingModule !== "eolr") return;
     if (input.dataset.colorPart) {
         const part = input.dataset.colorPart as ColorPart;
         stored.cubeColors = changeCubeColor(stored.cubeColors, part, Number(input.value));
@@ -593,5 +621,6 @@ window.addEventListener("keydown", event => {
         if (mapping[key]) { event.preventDefault(); move(mapping[key]); }
     }
 });
+applyBackground();
 render();
 
