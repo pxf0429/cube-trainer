@@ -18,7 +18,7 @@ const escape = (value: unknown) => String(value).replace(/[&<>"']/g, char => ent
 const newId = () => Array.from(crypto.getRandomValues(new Uint32Array(4)), value => value.toString(16).padStart(8, "0")).join("");
 let stored: Stored;
 try { stored = loadStored(localStorage.getItem(STORAGE_KEY)); } catch { stored = loadStored(null); }
-let trainingModule: "home" | "eolr" | "bld" = "bld";
+let trainingModule: "home" | "eolr" | "bld" = "home";
 let eolrPausedAt = performance.now();
 const blindfold = new BlindfoldTrainer(() => render(), toast);
 let tab: "practice" | "library" | "history" = "practice";
