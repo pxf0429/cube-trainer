@@ -1,4 +1,4 @@
-body{min-height:100vh;background:linear-gradient(130deg,var(--background-start,#eef6ff),#fff 52%,var(--background-end,#fff1f7)) fixed}
+body{min-height:100vh;background:linear-gradient(130deg,var(--background-start,#d8e9ff),#f9fbff 52%,var(--background-end,#f9dce9)) fixed}
 .studio-header{display:flex;align-items:flex-end;justify-content:space-between;gap:28px}
 .studio-intro>p{font-size:13px;line-height:2;color:var(--muted)}
 .background-settings{width:224px;flex:none;padding:14px 16px;background:#ffffffa8;border:1px solid #d9e5f3;border-radius:6px}

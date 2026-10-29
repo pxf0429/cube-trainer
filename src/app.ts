@@ -14,11 +14,14 @@ const orderedCases = [...cases].sort((a, b) => learning.order.indexOf(a.category
 const app = document.querySelector<HTMLDivElement>("#app")!;
 const STORAGE_KEY = "eolr-studio:v1";
 const BACKGROUND_KEY = "cube-studio:background:v1";
-const DEFAULT_BACKGROUND = { start: "#eef6ff", end: "#fff1f7" };
+const DEFAULT_BACKGROUND = { start: "#d8e9ff", end: "#f9dce9" };
 let background = { ...DEFAULT_BACKGROUND };
 try {
     const saved = JSON.parse(localStorage.getItem(BACKGROUND_KEY) || "null");
-    if (saved && /^#[0-9a-f]{6}$/i.test(saved.start) && /^#[0-9a-f]{6}$/i.test(saved.end)) background = { start: saved.start, end: saved.end };
+    if (saved && /^#[0-9a-f]{6}$/i.test(saved.start) && /^#[0-9a-f]{6}$/i.test(saved.end)) {
+        const wasDefault = saved.start.toLowerCase() === "#eef6ff" && saved.end.toLowerCase() === "#fff1f7";
+        if (!wasDefault) background = { start: saved.start, end: saved.end };
+    }
 } catch { /* Use the default gradient if the setting cannot be read. */ }
 function applyBackground() {
     document.body.style.setProperty("--background-start", background.start);
