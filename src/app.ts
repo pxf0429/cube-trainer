@@ -127,8 +127,7 @@ function homeView() {
         '</div></section></section>';
 }
 function header() {
-    return '<header class="page-header"><div><div class="eyebrow">ROUX METHOD / LAST SIX EDGES</div><h1>EOLR<span class="title-tag">练习台</span></h1>' +
-        '<p>棱块定向 / 左右棱归位</p></div>' + statCards() + '</header><nav class="page-tabs" aria-label="主导航">' +
+    return '<header class="page-header">' + statCards() + '</header><nav class="page-tabs" aria-label="主导航">' +
         (["practice", "library", "history"] as const).map(name => '<button class="' + (tab === name ? "active" : "") +
             '" data-tab="' + name + '" aria-current="' + (tab === name ? "page" : "false") + '">' +
             ({ practice: "开始练习", library: "情形图鉴", history: "练习记录" }[name]) + '</button>').join("") +
