@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const ts = require('typescript');
+const crypto = require('node:crypto');
 const root = path.resolve(__dirname, '..');
 const output = path.join(root, 'dist');
 
@@ -41,7 +42,10 @@ function build() {
     }
   }
   copyAssets(path.join(root, 'public'), output);
-  for (const file of ['index.html', 'favicon.svg', 'LICENSE', 'NOTICE.md']) {
+  const appVersion = crypto.createHash('sha256').update(fs.readFileSync(path.join(output, 'app.js'))).digest('hex').slice(0, 12);
+  const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace('src="./app.js"', 'src="./app.js?v=' + appVersion + '"');
+  fs.writeFileSync(path.join(output, 'index.html'), index);
+  for (const file of ['favicon.svg', 'LICENSE', 'NOTICE.md']) {
     if (fs.existsSync(path.join(root, file))) fs.copyFileSync(path.join(root, file), path.join(output, file));
   }
   console.log('Built independent static app: ' + output);
