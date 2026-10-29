@@ -95,12 +95,12 @@ function moduleNavigation() {
         '<span>' + ({ home: "训练首页", eolr: "EOLR 识别", bld: "盲拧记忆" }[module]) + '</span>' + icon("chevron") + '</button>').join("") + '</nav>';
 }
 function sidebar() {
-    const brand = '<aside class="sidebar"><a class="brand" href="./" aria-label="魔方训练器首页"><span class="brand-symbol"><img class="brand-logo" src="./favicon.svg?v=2" width="36" height="36" alt="">' +
-        '</span><span>CUBE<span class="brand-sub">魔方训练器</span></span></a>' + moduleNavigation();
+    const brand = '<header class="site-bar"><a class="brand" href="./" aria-label="魔方训练器首页"><span class="brand-symbol"><img class="brand-logo" src="./favicon.svg?v=2" width="36" height="36" alt="">' +
+        '</span><span>CUBE<span class="brand-sub">魔方训练器</span></span></a>' + moduleNavigation() + '</header>';
     if (trainingModule !== "eolr") {
-        return brand + '</aside>';
+        return brand;
     }
-    return brand +
+    return brand + '<aside class="sidebar">' +
         '<div class="sidebar-caption">EO 分类索引</div><button class="category all-category ' +
         (stored.categories.length === 9 && !favoriteMode ? "active" : "") + '" data-action="all">' + icon("library") +
         '<span>全部大类</span><span class="count">51</span></button><div class="category-list" aria-label="选择EO大类">' +
@@ -115,24 +115,16 @@ function sidebar() {
         '<button class="help-link" data-action="help">' + icon("help") + ' 使用说明与快捷键</button></div></aside>';
 }
 function homeView() {
-    const stats = summarize(stored.attempts), memory = blindfold.stats;
-    return '<header class="studio-header"><div class="studio-intro"><h1>魔方训练器</h1>' +
-        '<p>选择一个项目，开始练习。</p></div><section class="background-settings" aria-label="背景颜色设置"><div class="background-settings-heading"><span>背景颜色</span>' +
+    return '<section class="practice-home" aria-label="训练首页"><div class="practice-mode-bar"><span>训练项目</span><i></i>' +
+        '<button data-module="eolr">EOLR 棱块识别</button><button data-module="bld">BLD 盲拧记忆</button></div>' +
+        '<div class="practice-home-center"><p>选择一种练习，开始训练</p><h1>魔方训练器</h1>' +
+        '<div class="practice-home-actions"><button data-module="eolr">EOLR <span>棱块识别</span>' + icon("arrow") + '</button>' +
+        '<button data-module="bld">BLD <span>编码记忆</span>' + icon("arrow") + '</button></div></div>' +
+        '<section class="background-settings" aria-label="背景颜色设置"><div class="background-settings-heading"><span>背景颜色</span>' +
         '<button class="text-button" data-action="reset-background">恢复默认</button></div><div class="background-colors">' +
         '<label><input type="color" data-background="start" value="' + escape(background.start) + '" aria-label="渐变起始颜色"><span>起始色</span></label>' +
         '<label><input type="color" data-background="end" value="' + escape(background.end) + '" aria-label="渐变结束颜色"><span>结束色</span></label>' +
-        '</div></section></header>' +
-        '<section class="home-training" aria-label="选择训练项目"><div class="home-section-heading"><h2>训练项目</h2></div>' +
-        '<div class="home-training-grid"><article class="home-entry home-eolr"><div class="home-entry-label">EOLR <span>棱块识别</span></div>' +
-        '<h3>观察并识别情形</h3><p>先判断 EO 大类，再观察 LR 棱的位置。</p>' +
-        '<div class="home-eo-examples" aria-label="EO 分类示例">' + ["3/1", "2a/2", "4/2"].map(category =>
-            '<div>' + eoIcon(category) + '<span>' + category + '</span></div>').join("") + '</div>' +
-        '<div class="home-entry-footer"><span>51 种情形 <i></i> 今日已练 ' + stats.count + ' 题</span>' +
-        '<button data-module="eolr" class="home-entry-button home-eolr-button">开始练习 ' + icon("arrow") + '</button></div></article>' +
-        '<article class="home-entry home-memory"><div class="home-entry-label">BLD <span>盲拧记忆</span></div><h3>把编码和词语连起来</h3>' +
-        '<p>输入联想词，借助图片记忆和复习。</p><div class="home-code-example" aria-label="编码示例：JD，鸡蛋">' +
-        '<div><span>编码</span><b>JD</b></div><span class="home-example-arrow">' + icon("arrow") + '</span><div><span>联想词</span><b>鸡蛋</b></div><small>示例</small></div>' +
-        '<div class="home-entry-footer"><span>已录入 ' + memory.words + ' 个联想词</span><button data-module="bld" class="home-entry-button home-memory-button">开始记忆 ' + icon("arrow") + '</button></div></article></div></section>';
+        '</div></section></section>';
 }
 function header() {
     return '<header class="page-header"><div><div class="eyebrow">ROUX METHOD / LAST SIX EDGES</div><h1>EOLR<span class="title-tag">练习台</span></h1>' +
