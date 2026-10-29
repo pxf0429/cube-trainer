@@ -116,18 +116,23 @@ function sidebar() {
 }
 function homeView() {
     const stats = summarize(stored.attempts), memory = blindfold.stats;
-    return '<header class="studio-header"><div class="studio-intro"><div class="eyebrow">CUBE / TRAINING</div><h1>魔方训练器</h1>' +
-        '<p>选择训练项目</p></div><section class="background-settings" aria-label="背景颜色设置"><div class="background-settings-heading"><span>背景颜色</span>' +
+    return '<header class="studio-header"><div class="studio-intro"><h1>魔方训练器</h1>' +
+        '<p>选择一个项目，开始练习。</p></div><section class="background-settings" aria-label="背景颜色设置"><div class="background-settings-heading"><span>背景颜色</span>' +
         '<button class="text-button" data-action="reset-background">恢复默认</button></div><div class="background-colors">' +
         '<label><input type="color" data-background="start" value="' + escape(background.start) + '" aria-label="渐变起始颜色"><span>起始色</span></label>' +
         '<label><input type="color" data-background="end" value="' + escape(background.end) + '" aria-label="渐变结束颜色"><span>结束色</span></label>' +
         '</div></section></header>' +
-        '<section class="training-modules" aria-label="选择训练项目"><article class="training-module eolr-module"><div class="training-module-top">' + icon("cube") + '<span>ROUX / LAST SIX EDGES</span></div>' +
-        '<h2>EOLR<span>棱块识别</span></h2><p>判断 EO 大类与 LR 位置，练习51种情形。</p><div class="module-facts"><span><b>51</b> 种情形</span><span><b>' + stats.count +
-        '</b> 今日已练</span></div><button data-module="eolr" class="outline-button">开始识别训练 ' + icon("arrow") + '</button></article>' +
-        '<article class="training-module memory-module"><div class="training-module-top">' + icon("memory") + '<span>BLINDFOLD / VISUAL MEMORY</span></div><h2>BLD<span>盲拧记忆</span></h2>' +
-        '<p>编码联想、图片记忆、薄弱词复习与串联回忆。</p><div class="module-facts"><span><b>' + memory.words + '</b> 个联想词</span><span><b>' + memory.images +
-        '</b> 张记忆配图</span></div><button data-module="bld" class="primary">打开编码记忆 ' + icon("arrow") + '</button></article></section>';
+        '<section class="home-training" aria-label="选择训练项目"><div class="home-section-heading"><h2>训练项目</h2></div>' +
+        '<div class="home-training-grid"><article class="home-entry home-eolr"><div class="home-entry-label">EOLR <span>棱块识别</span></div>' +
+        '<h3>观察并识别情形</h3><p>先判断 EO 大类，再观察 LR 棱的位置。</p>' +
+        '<div class="home-eo-examples" aria-label="EO 分类示例">' + ["3/1", "2a/2", "4/2"].map(category =>
+            '<div>' + eoIcon(category) + '<span>' + category + '</span></div>').join("") + '</div>' +
+        '<div class="home-entry-footer"><span>51 种情形 <i></i> 今日已练 ' + stats.count + ' 题</span>' +
+        '<button data-module="eolr" class="home-entry-button home-eolr-button">开始练习 ' + icon("arrow") + '</button></div></article>' +
+        '<article class="home-entry home-memory"><div class="home-entry-label">BLD <span>盲拧记忆</span></div><h3>把编码和词语连起来</h3>' +
+        '<p>输入联想词，借助图片记忆和复习。</p><div class="home-code-example" aria-label="编码示例：JD，鸡蛋">' +
+        '<div><span>编码</span><b>JD</b></div><span class="home-example-arrow">' + icon("arrow") + '</span><div><span>联想词</span><b>鸡蛋</b></div><small>示例</small></div>' +
+        '<div class="home-entry-footer"><span>已录入 ' + memory.words + ' 个联想词</span><button data-module="bld" class="home-entry-button home-memory-button">开始记忆 ' + icon("arrow") + '</button></div></article></div></section>';
 }
 function header() {
     return '<header class="page-header"><div><div class="eyebrow">ROUX METHOD / LAST SIX EDGES</div><h1>EOLR<span class="title-tag">练习台</span></h1>' +
