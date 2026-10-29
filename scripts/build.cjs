@@ -7,6 +7,16 @@ const output = path.join(root, 'dist');
 
 function build() {
   fs.mkdirSync(output, { recursive: true });
+  const versionHash = crypto.createHash('sha256');
+  function hashSources(directory) {
+    for (const item of fs.readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+      const file = path.join(directory, item.name);
+      if (item.isDirectory()) hashSources(file);
+      else { versionHash.update(path.relative(path.join(root, 'src'), file).replace(/\\/g, '/')); versionHash.update(fs.readFileSync(file)); }
+    }
+  }
+  hashSources(path.join(root, 'src'));
+  const buildVersion = versionHash.digest('hex').slice(0, 12);
   function visit(directory) {
     for (const item of fs.readdirSync(directory, { withFileTypes: true })) {
       const file = path.join(directory, item.name);
@@ -21,8 +31,8 @@ function build() {
         });
         const content = result.outputText.replace(
           /(from\s*["']|import\s*["'])(\.{1,2}\/[^"']+)(["'])/g,
-          (_, start, specifier, end) => start + specifier.replace(/\.json$/, '.js').replace(/(?<!\.js)$/, '.js') + end,
-        );
+          (_, start, specifier, end) => start + specifier.replace(/\.json$/, '.js').replace(/(?<!\.js)$/, '.js') + '?v=' + buildVersion + end,
+        ).replace(/(["'])\.\/generator\.worker\.js\1/g, (_, quote) => quote + './generator.worker.js?v=' + buildVersion + quote);
         fs.writeFileSync(destination, content);
       } else if (file.endsWith('.json')) {
         fs.writeFileSync(destination, 'export default ' + fs.readFileSync(file, 'utf8') + ';\n');
@@ -42,8 +52,7 @@ function build() {
     }
   }
   copyAssets(path.join(root, 'public'), output);
-  const appVersion = crypto.createHash('sha256').update(fs.readFileSync(path.join(output, 'app.js'))).digest('hex').slice(0, 12);
-  const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace('src="./app.js"', 'src="./app.js?v=' + appVersion + '"');
+  const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace('src="./app.js"', 'src="./app.js?v=' + buildVersion + '"');
   fs.writeFileSync(path.join(output, 'index.html'), index);
   for (const file of ['favicon.svg', 'LICENSE', 'NOTICE.md']) {
     if (fs.existsSync(path.join(root, file))) fs.copyFileSync(path.join(root, file), path.join(output, file));

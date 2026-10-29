@@ -33,6 +33,29 @@ test('mixed-category sampling stays in the selected groups and rejects empty ran
   assert.throws(() => engine.sample([]));
   assert.throws(() => engine.sample(['4/0'], '3/1:坏'));
 });
+test('each selected case is sampled equally despite different numbers of underlying states', () => {
+  const random = Math.random;
+  let seed = 123456789;
+  Math.random = () => {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    return seed / 4294967296;
+  };
+  try {
+    const categories = ['3/1', '4/2'];
+    const expectedKeys = cases.filter(item => categories.includes(item.category)).map(keyForCase);
+    const counts = new Map(expectedKeys.map(key => [key, 0]));
+    const draws = 16000;
+    for (let i = 0; i < draws; i++) {
+      const key = engine.sample(categories).key;
+      assert.ok(counts.has(key));
+      counts.set(key, counts.get(key) + 1);
+    }
+    const expected = draws / expectedKeys.length;
+    for (const [key, count] of counts) {
+      assert.ok(Math.abs(count - expected) < expected * 0.1, `${key}: ${count}, expected approximately ${expected}`);
+    }
+  } finally { Math.random = random; }
+});
 test('encoded graph coordinates agree with the real cube including centers and corners', () => {
   const slots = [0, 1, 2, 3, 4, 6], factorial = [120, 24, 6, 2, 1, 1];
   let checked = 0;

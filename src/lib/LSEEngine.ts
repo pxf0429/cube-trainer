@@ -123,18 +123,14 @@ export class LSEEngine {
     sample(categories: string[], caseKey?: string): { scramble: string; key: string } {
         const pools = Array.from(this.pools.entries()).filter(([key]) =>
             categories.includes(key.split(":")[0]) && (!caseKey || key === caseKey));
-        const size = pools.reduce((sum, [, pool]) => sum + pool.length, 0);
-        if (!size) throw new Error("所选范围没有可练习的状态");
+        if (!pools.length) throw new Error("所选范围没有可练习的状态");
+        const [key, pool] = pools[Math.floor(Math.random() * pools.length)];
         for (let attempt = 0; attempt < 50; attempt++) {
-            let index = Math.floor(Math.random() * size);
-            for (const [key, pool] of pools) {
-                if (index >= pool.length) { index -= pool.length; continue; }
-                const code = pool[index];
-                if (attempt < 49 && this.recent.includes(code)) break;
-                this.recent.push(code);
-                this.recent = this.recent.slice(-20);
-                return { scramble: this.scrambleFor(code), key };
-            }
+            const code = pool[Math.floor(Math.random() * pool.length)];
+            if (attempt < 49 && this.recent.includes(code)) continue;
+            this.recent.push(code);
+            this.recent = this.recent.slice(-20);
+            return { scramble: this.scrambleFor(code), key };
         }
         throw new Error("暂时无法生成题目，请重试");
     }
