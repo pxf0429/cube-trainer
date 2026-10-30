@@ -106,7 +106,7 @@ function sidebar() {
         '<span>全部大类</span><span class="count">51</span></button><div class="category-list" aria-label="选择EO大类">' +
         learning.order.map(category => '<button class="category ' + (stored.categories.includes(category) ? "selected" : "") +
             '" data-category="' + category + '" title="' + escape((learning.prerequisites.get(category) || []).length ? "先掌握：" + learning.prerequisites.get(category)!.join("、") : "基础大类") + '" aria-pressed="' + stored.categories.includes(category) + '">' + eoIcon(category) +
-            '<span>' + category + '</span><span class="count">' + cases.filter(c => c.category === category).length + '</span><i class="selection-dot"></i></button>').join("") +
+            '<span>' + category + '</span><span class="count">' + cases.filter(c => c.category === category).length + '</span><i class="selection-dot" aria-hidden="true">' + icon("check") + '</i></button>').join("") +
         '</div><div class="sidebar-rule"></div><button class="category favorite-category ' + (favoriteMode ? "active" : "") +
         '" data-action="favorites" aria-pressed="' + favoriteMode + '">' + icon("star") + '<span>收藏复习</span><span class="count">' +
         availableFavorites().length + '</span></button>' + (activeCase ? '<div class="target-notice">正在定向练习<br><b>' +

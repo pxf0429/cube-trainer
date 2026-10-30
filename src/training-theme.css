@@ -158,6 +158,30 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   outline-offset: 3px;
 }
 button:disabled { cursor: default; }
+.module-eolr .category-list .category.selected,
+.module-eolr .category-list .category.selected:hover,
+.module-eolr .category.active {
+  background: #326bb2;
+  color: #fff;
+  font-weight: 600;
+  border-color: #326bb2;
+}
+.module-eolr .category-list .category.selected .count,
+.module-eolr .category.active .count { color: #fff; }
+.module-eolr .category-list .category.selected .eo-mini i { background: #ffffff40; }
+.module-eolr .category-list .category.selected .eo-mini i.bad { background: #fff; }
+.module-eolr .category-list .selection-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  background: transparent;
+  visibility: hidden;
+}
+.module-eolr .category-list .category.selected .selection-dot { visibility: visible; color: #fff; }
+.module-eolr .category-list .selection-dot .icon { width: 16px; height: 16px; --icon-accent: #fff; }
 @media (max-width: 700px) {
   .trainer-navigation { gap: 14px; margin-bottom: 22px; }
   .module-eolr .trainer-navigation .page-tabs,

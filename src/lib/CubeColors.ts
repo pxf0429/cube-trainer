@@ -8,7 +8,7 @@ export const CUBE_COLORS = [
 ];
 export type CubeColors = { bottom: number; left: number };
 export type ColorPart = "bottom" | "left" | "right";
-export const DEFAULT_CUBE_COLORS: CubeColors = { bottom: 1, left: 4 };
+export const DEFAULT_CUBE_COLORS: CubeColors = { bottom: 0, left: 3 };
 export const oppositeColor = (color: number) => color ^ 1;
 const validColor = (value: unknown): value is number => typeof value === "number" && Number.isInteger(value) && value >= 0 && value < 6;
 const adjacent = (a: number, b: number) => a !== b && oppositeColor(a) !== b;

@@ -35,7 +35,7 @@ test('all 24 color schemes are real rotations with unchanged corner handedness',
 });
 
 test('changing either bridge keeps the opposite bridge and bottom consistent', () => {
-  const rightBlue = changeCubeColor(DEFAULT_CUBE_COLORS, 'right', 3);
+  const rightBlue = changeCubeColor({ bottom: 1, left: 4 }, 'right', 3);
   assert.deepEqual(cubePalette(rightBlue), [0, 1, 5, 4, 2, 3]);
   const bottomGreen = changeCubeColor(rightBlue, 'bottom', 2);
   assert.equal(bottomGreen.bottom, 2);
@@ -51,6 +51,25 @@ test('saved colors survive reload and old or corrupt settings recover defaults',
     assert.deepEqual(loadCubeColors(value), DEFAULT_CUBE_COLORS);
   }
   assert.deepEqual(loadStored(null).cubeColors, DEFAULT_CUBE_COLORS);
+});
+
+test('blue-left white-bottom defaults replace the former default only once', () => {
+  const current = loadStored(null);
+  assert.deepEqual(cubePalette(current.cubeColors), [1, 0, 5, 4, 3, 2]);
+  const old = { cubeColors: { bottom: 1, left: 4 }, categories: ['3/1'], focusLR: true };
+  const upgraded = loadStored(JSON.stringify(old));
+  assert.deepEqual(upgraded.cubeColors, { bottom: 0, left: 3 });
+  assert.deepEqual(upgraded.categories, ['3/1']);
+  assert.equal(upgraded.focusLR, true);
+  assert.deepEqual(loadStored(JSON.stringify({ ...old, cubeColorsVersion: 1 })).cubeColors, old.cubeColors);
+  const custom = { bottom: 1, left: 2 };
+  assert.deepEqual(loadStored(JSON.stringify({ cubeColors: custom })).cubeColors, custom);
+  for (const net of [false, true]) {
+    const markup = cubeMarkup(new CubieCube(), net, false, -27, -34);
+    assert.ok(markup.includes('白色 · D 中心'));
+    assert.ok(markup.includes('蓝色 · L 中心'));
+    assert.ok(markup.includes('绿色 · R 中心'));
+  }
 });
 
 test('recoloring uses the same stickers in 3D, peek faces and net without changing the practice state', () => {

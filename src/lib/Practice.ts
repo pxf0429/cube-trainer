@@ -11,7 +11,7 @@ export const keyForCase = (item: Pick<EOLRCase, "category" | "name">) => item.ca
 export type Rating = "known" | "again" | "viewed";
 export type Attempt = { id: string; key: string; category: string; name: string; elapsed: number; rating: Rating; at: number };
 export type Favorite = { id: string; key: string; scramble: string; at: number };
-export type Stored = { favorites: Favorite[]; attempts: Attempt[]; categories: string[]; focusLR: boolean; cubeColors: CubeColors };
+export type Stored = { favorites: Favorite[]; attempts: Attempt[]; categories: string[]; focusLR: boolean; cubeColors: CubeColors; cubeColorsVersion: number };
 
 export function hasAlignedCenters(cube: CubieCube): boolean {
     return (cube.tp[0] === 0 && cube.tp[1] === 1) || (cube.tp[0] === 1 && cube.tp[1] === 0);
@@ -34,12 +34,17 @@ export function parseScramble(text: string, options: { allowSideCenters?: boolea
 }
 
 export function loadStored(raw: string | null): Stored {
-    const defaults: Stored = { favorites: [], attempts: [], categories: [...CATEGORIES], focusLR: false, cubeColors: { ...DEFAULT_CUBE_COLORS } };
+    const defaults: Stored = { favorites: [], attempts: [], categories: [...CATEGORIES], focusLR: false, cubeColors: { ...DEFAULT_CUBE_COLORS }, cubeColorsVersion: 1 };
     try {
         const value = JSON.parse(raw || "null");
         if (!value || typeof value !== "object") return defaults;
         defaults.focusLR = value.focusLR === true;
         defaults.cubeColors = loadCubeColors(value.cubeColors);
+        // Upgrade the former default once, without replacing other personal
+        // schemes or preventing a deliberate return to the old colors later.
+        if (!value.cubeColorsVersion && value.cubeColors?.bottom === 1 && value.cubeColors?.left === 4) {
+            defaults.cubeColors = { ...DEFAULT_CUBE_COLORS };
+        }
         if (Array.isArray(value.categories)) {
             const valid = value.categories.filter((c: unknown) => typeof c === "string" && CATEGORIES.includes(c));
             if (valid.length) defaults.categories = Array.from(new Set(valid)) as string[];
