@@ -1,21 +1,38 @@
 .cube-stage{height:380px}
 .cube-stage:after{display:none}
-.cube-stage .cube-scene{width:100%;height:100%;max-width:490px;perspective:2200px;transform:translateY(-35px)}
+.cube-stage .cube-scene{width:100%;height:100%;max-width:490px;perspective:2200px;transform:translateY(-20px)}
 .cube-stage .cube-rig{scale:.82}
 .cube-stage .cube-shadow{transform:translateY(150px);opacity:.3}
 .cube-mappings{position:absolute;inset:0;transform-style:preserve-3d;pointer-events:none}
 .mapped-face{position:absolute;inset:0;width:143px;height:143px;display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:4px;backface-visibility:visible;transform-style:preserve-3d}
 .mapped-face .sticker{border-radius:2px;border-width:1px;box-shadow:0 0 0 1px #30435565}
 .mapped-face .muted-sticker{border-width:4px}
-.mapped-front{transform:translateZ(330px)}
-.mapped-back{transform:rotateY(180deg) translateZ(330px)}
-.mapped-right{transform:rotateY(90deg) translateZ(214px)}
-.mapped-left{transform:rotateY(-90deg) translateZ(214px)}
-.mapped-up{transform:rotateX(90deg) translateZ(214px)}
-.mapped-down{transform:rotateX(-90deg) translateZ(214px)}
-@media(min-width:1500px){.cube-stage{height:440px}.cube-stage .cube-rig{scale:.93}.cube-stage .cube-scene{transform:translateY(-40px)}}
-@media(max-width:700px){.cube-stage{height:365px}.cube-stage .cube-rig{scale:.73}.cube-stage .cube-scene{transform:translateY(-30px)}}
+.mapped-front{transform:translateZ(260px)}
+.mapped-back{transform:rotateY(180deg) translateZ(260px)}
+.mapped-right{transform:rotateY(90deg) translateZ(176px)}
+.mapped-left{transform:rotateY(-90deg) translateZ(176px)}
+.mapped-up{transform:rotateX(90deg) translateZ(176px)}
+.mapped-down{transform:rotateX(-90deg) translateZ(176px)}
+@media(min-width:1500px){.cube-stage{height:440px}.cube-stage .cube-rig{scale:.93}.cube-stage .cube-scene{transform:translateY(-25px)}}
+@media(max-width:700px){.cube-stage{height:365px}.cube-stage .cube-rig{scale:.73}.cube-stage .cube-scene{transform:translateY(-15px)}}
 @media(max-width:380px){.cube-stage{height:345px}.cube-stage .cube-rig{scale:.68}}
+
+/* Let the net fill the observation panel rather than using tiny fixed faces.
+   Its stage grows with all three rows so neither pole is cropped. */
+.cube-stage:has(>.cube-net){height:auto;min-height:380px;padding:42px 20px 24px}
+.cube-stage .cube-net{
+    width:min(100%,480px);grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-template-rows:repeat(3,auto);gap:8px;margin:0;
+}
+.cube-stage .net-face{min-width:0;align-self:start}
+.cube-stage .face-label{font-size:11px;line-height:20px}
+.cube-stage .net-face .face-grid{gap:3px;padding:3px}
+@media(max-width:700px){
+    .cube-stage:has(>.cube-net){min-height:0;padding:40px 12px 20px}
+    .cube-stage .cube-net{gap:5px}
+    .cube-stage .face-label{font-size:10px;line-height:18px}
+    .cube-stage .net-face .face-grid{gap:2px;padding:2px}
+}
 
 /* Focus follows the actual UL/UR pieces in every view. Keep a slim color
    perimeter on the remaining stickers so EO and centers are still readable. */
