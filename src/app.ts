@@ -86,7 +86,7 @@ function statCards() {
     const stats = summarize(stored.attempts);
     return '<div class="top-stats"><div>' + icon("bolt") + '<span>今日练习<b>' + stats.count + '<small> 题</small></b></span></div><div>' +
         icon("clock") + '<span>平均识别<b>' + (stats.count ? (stats.average / 1000).toFixed(1) : "—") +
-        '<small> 秒</small></b></span></div><div class="status-stat"><span class="online-dot"></span>LOCAL / 本地记录</div></div>';
+        '<small> 秒</small></b></span></div></div>';
 }
 function moduleNavigation() {
     return '<nav class="module-navigation" aria-label="训练项目">' + (["home", "eolr", "bld"] as const).map(module =>
@@ -115,9 +115,8 @@ function sidebar() {
         '<button class="help-link" data-action="help">' + icon("help") + ' 使用说明与快捷键</button></div></aside>';
 }
 function homeView() {
-    return '<section class="practice-home" aria-label="训练首页"><div class="practice-mode-bar"><span>训练项目</span><i></i>' +
-        '<button data-module="eolr">EOLR 棱块识别</button><button data-module="bld">BLD 盲拧记忆</button></div>' +
-        '<div class="practice-home-center"><p>选择一种练习，开始训练</p><h1>魔方训练器</h1>' +
+    return '<section class="practice-home" aria-label="训练首页">' +
+        '<div class="practice-home-center"><h1>开始练习</h1>' +
         '<div class="practice-home-actions"><button data-module="eolr">EOLR <span>棱块识别</span>' + icon("arrow") + '</button>' +
         '<button data-module="bld">BLD <span>编码记忆</span>' + icon("arrow") + '</button></div></div>' +
         '<section class="background-settings" aria-label="背景颜色设置"><div class="background-settings-heading"><span>背景颜色</span>' +
@@ -127,11 +126,11 @@ function homeView() {
         '</div></section></section>';
 }
 function header() {
-    return '<header class="page-header">' + statCards() + '</header><nav class="page-tabs" aria-label="主导航">' +
+    return '<div class="trainer-navigation"><header class="page-header">' + statCards() + '</header><nav class="page-tabs" aria-label="主导航">' +
         (["practice", "library", "history"] as const).map(name => '<button class="' + (tab === name ? "active" : "") +
             '" data-tab="' + name + '" aria-current="' + (tab === name ? "page" : "false") + '">' +
             ({ practice: "开始练习", library: "情形图鉴", history: "练习记录" }[name]) + '</button>').join("") +
-        '<span class="tab-end">EO 大类 → LR 位置 → 中文解法</span></nav>';
+        '</nav></div>';
 }
 function answerPanel() {
     const revealed = current && current.revealed;
@@ -185,8 +184,8 @@ function practiceView() {
     return '<div class="practice-toolbar"><div><span class="session-dot"></span><b>' + (isCustom ? "自定义练习" : favoriteMode ? "收藏复习" : "自由练习") +
         '</b><span class="toolbar-separator"></span><span>' + escape(isCustom ? "你的打乱" : selectedLabel()) + '</span><span class="soft-label">' + rangeCount +
         ' 种情形</span></div><button class="text-button" data-action="custom">' + icon("keyboard") + ' 输入打乱</button></div>' +
-        '<section class="scramble-card"><span class="section-label">SCRAMBLE <small>打乱</small></span><div class="scramble-text">' +
-        (busy ? '<span class="loading-line">' + (ready ? "正在准备下一题…" : "正在准备练习室…") + '</span>' : current ? escape(current.scramble) :
+        '<section class="scramble-card"><span class="section-label">打乱</span><div class="scramble-text">' +
+        (busy ? '<span class="loading-line">' + (ready ? "正在准备下一题…" : "正在准备题目…") + '</span>' : current ? escape(current.scramble) :
             '<span class="error-inline">' + escape(errorMessage || "暂时没有题目") + '</span>') + '</div><button class="icon-button" data-action="copy" aria-label="复制打乱" title="复制打乱" ' +
         (disabled ? "disabled" : "") + '>' + icon("copy") + '</button></section>' +
         '<div class="practice-grid"><section class="cube-card"><div class="cube-card-top"><span class="case-number">魔方观察</span>' +
@@ -196,7 +195,7 @@ function practiceView() {
         '" data-action="star" aria-label="' + (isFavorite() ? "取消收藏当前题目" : "收藏当前题目") + '" aria-pressed="' + isFavorite() +
         '" title="收藏当前题目" ' + (disabled ? "disabled" : "") + '>' + icon("star") + '</button></div>' +
         '<div class="cube-stage ' + (busy ? "is-loading" : "") + '">' +
-        (busy ? '<div class="stage-loading"><div class="loading-cube">' + icon("cube") + '</div><span>准备好，换个角度想一想。</span></div>' :
+        (busy ? '<div class="stage-loading"><div class="loading-cube">' + icon("cube") + '</div><span>正在生成题目…</span></div>' :
             current ? cubeMarkup(cube, netView, stored.focusLR, pitch, yaw, stored.cubeColors) : '<div class="stage-error">' + icon("help") + '<p>' + escape(errorMessage) +
             '</p><button class="primary" data-action="retry">重新准备</button></div>') +
         '<div class="stage-top-line"><span>' + (moveHistory.length ? "已操作 " + moveHistory.length + " 步" : "观察 EO，再寻找 LR") +
@@ -264,7 +263,7 @@ function libraryView() {
 function historyView() {
     const summary = summarize(stored.attempts);
     const recent = stored.attempts.slice(-12).reverse();
-    return '<div class="section-heading"><div><div class="eyebrow">SESSION LOG</div><h2>练习记录</h2><p>查看识别耗时与掌握情况。记录仅保存在当前浏览器，可导出备份。</p></div><div class="backup-actions"><button class="text-button" data-action="import">' +
+    return '<div class="section-heading"><div><h2>练习记录</h2><p>查看识别耗时与掌握情况。记录仅保存在当前浏览器，可导出备份。</p></div><div class="backup-actions"><button class="text-button" data-action="import">' +
         icon("reset") + ' 导入备份</button><button class="outline-button" data-action="export">' + icon("download") + ' 导出记录</button></div></div>' +
         '<div class="history-stats"><div><span>今日已练</span><b>' + summary.count + '<small> 题</small></b></div><div><span>今日自评掌握率</span><b>' +
         summary.rate + '<small> %</small></b></div><div><span>累计覆盖情形</span><b>' + new Set(stored.attempts.map(a => a.key)).size +
@@ -314,7 +313,7 @@ function render() {
     app.innerHTML = '<div class="app-shell module-' + trainingModule + '">' + sidebar() + '<main>' +
         (trainingModule === "home" ? homeView() : trainingModule === "bld" ? blindfold.markup() : header() +
         (tab === "practice" ? practiceView() : tab === "library" ? libraryView() : historyView()) +
-        '<footer class="page-footnote"><span>EOLR / 练习台</span><span>U + M ONLY · 51 PATTERNS</span><button data-action="help">使用说明 / 许可</button></footer>') + '</main></div>' + modalView();
+        '<footer class="page-footnote"><button data-action="help">使用说明与许可</button></footer>') + '</main></div>' + modalView();
     app.querySelectorAll<HTMLDetailsElement>('details[data-case-details]').forEach(node=>node.open=expandedCases.has(node.dataset.caseDetails));
     const bldRoot = app.querySelector<HTMLElement>("#bld-app"); if (bldRoot) blindfold.mount(bldRoot);
     updateTimer();

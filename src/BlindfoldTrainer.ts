@@ -87,12 +87,11 @@ export class BlindfoldTrainer {
     }
     header(): string {
         const stats = this.stats;
-        return '<header class="page-header bld-page-header"><div><div class="eyebrow">BLINDFOLD / ASSOCIATION & RECALL</div><h1>盲拧<span class="title-tag">编码记忆</span></h1>' +
-            '<p>编码联想与图片记忆</p></div><div class="top-stats"><div><span>已录入<b>' + stats.pairs + '<small> 组</small></b></span></div><div><span>回忆正确率<b>' +
+        return '<div class="trainer-navigation"><header class="page-header bld-page-header"><div class="top-stats"><div><span>已录入<b>' + stats.pairs + '<small> 组</small></b></span></div><div><span>回忆正确率<b>' +
             (stats.reviews ? stats.accuracy : "—") + '<small> %</small></b></span></div></div></header>' +
             '<nav class="page-tabs" aria-label="盲拧功能">' + (["encode", "library", "train", "schema"] as const).map(view => '<button data-bld-view="' + view + '" class="' +
             (view === this.view ? "active" : "") + '" aria-current="' + (view === this.view ? "page" : "false") + '">' + ({ encode: "编码记忆", library: "编码词库", train: "记忆练习", schema: "编码方案" }[view]) + '</button>').join("") +
-            '<span class="tab-end">编码 → 联想词 → 画面 → 回忆</span></nav>';
+            '</nav></div>';
     }
     markup(): string {
         return '<div id="bld-app">' + this.header() + '<div class="bld-range"><label>练习范围 <select id="bld-group" aria-label="盲拧练习范围">' +
@@ -101,15 +100,15 @@ export class BlindfoldTrainer {
             ({ speffz: "Speffz", chichu: "彳亍", custom: "自定义" }[this.store.scheme]) + ' / ' + (this.view === "encode" ? availableCodes(this.store).length + ' 组随机编码' : this.pool().length + ' 个可练词') + '</span></div>' +
             (this.notice ? '<div class="bld-notice" role="status">' + esc(this.notice) + (this.deleted ? '<button data-bld-action="undo-delete">撤销删除</button>' : '') + '</div>' : '') +
             (this.view === "encode" ? this.encodingView() : this.view === "library" ? this.library() : this.view === "schema" ? this.schema() : this.training()) +
-            '<footer class="page-footnote"><span>BLD / 编码记忆</span><a href="./NOTICE.md" target="_blank" rel="noreferrer">关于与许可</a></footer></div>';
+            '<footer class="page-footnote"><a href="./NOTICE.md" target="_blank" rel="noreferrer">关于与许可</a></footer></div>';
     }
     private encodingView(): string {
         const q = this.encoding, entry = this.store.entries.find(e => e.id === q.entryId), submitted = q.phase !== "input", words = mnemonicWords(q.code);
         const status = q.phase === "searching" ? "正在查找配图…" : this.encodingChoosing ? "选择对应的图片" : q.error ? "配图暂未找到，可重新搜索" : q.reused ? "已载入配图" : entry?.image ? "配图已保存" : "联想词已保存";
-        return '<section class="bld-encoding ' + (submitted ? 'has-result' : '') + '"><div class="bld-encoding-top"><span>' + icon("memory") + ' 随机编码 · 想起它对应的词</span><button class="text-button" data-bld-action="next-encoding">' +
+        return '<section class="bld-encoding ' + (submitted ? 'has-result' : '') + '"><div class="bld-encoding-top"><span>' + icon("memory") + ' 输入联想词</span><button class="text-button" data-bld-action="next-encoding">' +
             (submitted ? "下一组" : "换一组") + ' ' + icon("arrow") + '</button></div><div class="bld-encoding-main"><div class="bld-encoding-code">' + esc(displayCode(q.code)) + '</div>' +
             '<form id="bld-encoding-form"><label class="sr-only" for="bld-encoding-word">联想词</label><input id="bld-encoding-word" maxlength="80" placeholder="输入这组编码对应的联想词" autocomplete="off" value="' + esc(q.word) + '" ' +
-            (submitted ? 'disabled' : '') + '><button class="primary" type="submit" aria-label="记住这个词" ' + (submitted ? 'disabled' : '') + '>' + icon("arrow") + '<span>记住这个词</span></button></form>' +
+            (submitted ? 'disabled' : '') + '><button class="primary" type="submit" aria-label="记住这个词" ' + (submitted ? 'disabled' : '') + '>' + icon("check") + '<span>记住这个词</span></button></form>' +
             (!submitted ? (words.length ? '<div class="bld-mnemonic-suggestions" aria-label="参考候选词"><span>候选词</span><div>' + words.map((word, index) =>
                 '<button type="button" data-bld-candidate="' + index + '">' + esc(word) + '</button>').join("") + '</div></div>' : '<p class="bld-mnemonic-empty">这组暂无候选词，可以输入自己的联想。</p>') +
                 '<p class="bld-encoding-hint">输入或选择一个联想词，按 Enter 查看配图。</p>' :
@@ -171,7 +170,7 @@ export class BlindfoldTrainer {
             '<div><button class="outline-button" data-bld-action="new">' + icon("plus") + ' 录入编码</button><button class="text-button" data-bld-action="bulk">批量录入</button>' +
             '<button class="text-button" data-bld-action="matrix">' + (this.matrix ? '卡片视图' : '编码表') + '</button></div></div>' +
             (this.bulkOpen ? '<section class="bld-bulk"><h3>批量录入</h3><p>每行一组：AB 词语；多个联想词用 / 分开。也支持 1 12 词语。</p><textarea id="bld-bulk-text" rows="5" placeholder="BC 白菜&#10;JD 鸡蛋&#10;PG 苹果">' +
-                esc(this.bulkText) + '</textarea><button class="primary" data-bld-action="save-bulk">加入词库 ' + icon("arrow") + '</button></section>' : '') +
+                esc(this.bulkText) + '</textarea><button class="primary" data-bld-action="save-bulk">加入词库 ' + icon("check") + '</button></section>' : '') +
             '<div class="bld-library-layout"><section class="bld-word-section"><div class="bld-section-title"><span>' + rows.length + ' 个联想词 · ' +
             all.filter(e => !!e.image).length + ' 个已有配图</span><button class="text-button" data-bld-action="' + (this.batchRunning ? 'stop-images' : 'batch-images') + '" ' + (!all.length ? 'disabled' : '') + '>' +
             icon(this.batchRunning ? "close" : "image") + (this.batchRunning ? '停止配图' : '补齐缺少的图片') + '</button></div>' +
@@ -234,13 +233,13 @@ export class BlindfoldTrainer {
     }
     private questionView(): string {
         const q = this.question, entry = q && this.store.entries.find(e => e.id === q.id);
-        if (!q || !entry) return '<section class="bld-start"><div class="eyebrow">RECALL / 建立条件反射</div><h2>让编码与画面连起来。</h2><p>只从你录入的词出题，支持同编码的多个联想词。</p><button class="primary" data-bld-action="next-question">开始练习 ' + icon("arrow") + '</button></section>';
+        if (!q || !entry) return '<section class="bld-start"><h2>回忆编码词</h2><p>只从你录入的词出题，支持同编码的多个联想词。</p><button class="primary" data-bld-action="next-question">开始练习 ' + icon("arrow") + '</button></section>';
         const expected = this.mode === "code-word" ? this.store.entries.filter(e => eligibleEntry(e, this.store) && e.code === entry.code).map(e => e.word).join(" / ") : displayCode(entry.code);
         return '<section class="bld-recall"><div class="bld-recall-heading"><span>' + ({ "code-word": "看到编码，你想到什么？", "word-code": "这个词对应哪组编码？", "image-code": "看到画面，想起它的编码。", sequence: "" }[this.mode]) +
             '</span><span class="soft-label">' + labels[this.store.group] + ' / ' + this.pool().length + ' 个词</span></div><div class="bld-recall-main">' +
             (this.mode === "image-code" ? this.image(entry.image, "回忆这张图片对应的编码", true) : '<div class="bld-recall-prompt ' + (this.mode === "code-word" ? 'is-code' : '') + '">' + esc(this.mode === "code-word" ? displayCode(entry.code) : entry.word) + '</div>') +
             '<form id="bld-answer-form"><label class="sr-only" for="bld-answer">你的答案</label><input id="bld-answer" autocomplete="off" placeholder="' + (this.mode === "code-word" ? '输入联想词' : '输入编码，如 AB') + '" value="' + esc(q.answer) + '" ' + (q.done ? 'disabled' : '') +
-            '><button class="primary" type="submit" ' + (q.done ? 'disabled' : '') + '>核对 ' + icon("arrow") + '</button></form>' +
+            '><button class="primary" type="submit" ' + (q.done ? 'disabled' : '') + '>核对 ' + icon("check") + '</button></form>' +
             (q.done ? '<div class="bld-answer-result ' + (q.correct ? 'correct' : 'incorrect') + '" role="status"><span>' + icon(q.correct ? "check" : "reset") + (q.correct ? '答对了' : '再记住一次') + ' · ' + (q.elapsed / 1000).toFixed(1) + ' 秒</span><h3>' + esc(expected) + '</h3>' +
                 (entry.note ? '<p>' + esc(entry.note) + '</p>' : '') + (this.mode !== "image-code" ? this.image(entry.image, entry.word, true) : '') + this.credit(entry.image) + '</div>' : '') +
             '<div class="bld-recall-actions">' + (q.done ? '<button class="primary" data-bld-action="next-question">下一组 ' + icon("arrow") + '</button>' : '<button class="text-button" data-bld-action="reveal-question">想不起来，看看答案</button>') +
@@ -248,7 +247,7 @@ export class BlindfoldTrainer {
     }
     private sequenceView(): string {
         const seq = this.sequence;
-        if (!seq) return '<section class="bld-start"><div class="eyebrow">LINK / 串联记忆</div><h2>把几个画面连成一个故事。</h2><p>先看编码、联想词和图片，再遮住它们，按顺序回忆编码。</p><button class="primary" data-bld-action="new-sequence">开始一组 ' + icon("arrow") + '</button></section>';
+        if (!seq) return '<section class="bld-start"><h2>串联记忆</h2><p>先看编码、联想词和图片，再遮住它们，按顺序回忆编码。</p><button class="primary" data-bld-action="new-sequence">开始一组 ' + icon("arrow") + '</button></section>';
         const rows = seq.ids.map(id => this.store.entries.find(e => e.id === id)!);
         return '<section class="bld-sequence"><div class="bld-recall-heading"><span>' + ({ memorize: '把这些画面按顺序连起来', recall: '按顺序写出刚才的编码', result: '这一组的回忆结果' }[seq.stage]) +
             '</span><span class="soft-label">' + rows.length + ' 组' + (seq.stage === "result" ? ' · 记忆用时 ' + (seq.elapsed / 1000).toFixed(1) + ' 秒' : '') + '</span></div>' +

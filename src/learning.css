@@ -1,5 +1,5 @@
-.case-reference{color:#2868b2;text-decoration:underline;text-decoration-color:#91b2dd;text-underline-offset:4px;white-space:nowrap;cursor:pointer}
-.case-reference:hover{color:#ad648c;text-decoration-color:var(--pink)}.case-reference:focus-visible{outline:2px solid var(--pink);outline-offset:4px}
+.case-reference{color:var(--muted);text-decoration:underline;text-decoration-color:#91b2dd;text-underline-offset:4px;white-space:nowrap;cursor:pointer}
+.case-reference:hover{color:var(--muted);text-decoration-color:var(--pink)}.case-reference:focus-visible{outline:2px solid var(--pink);outline-offset:4px}
 .case-reference-modal{max-width:560px}.reference-case-body>section{border-top:1px solid var(--line);padding:20px 0}.reference-case-body h3{font-size:11px;color:var(--muted);font-weight:500;margin-bottom:11px}
 .reference-case-body p{font-size:13px;line-height:2.2;overflow-wrap:anywhere}.reference-case-actions{display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid var(--line);padding-top:20px}
 .reference-case-actions .primary{font-size:12px;min-width:170px;justify-content:space-between}.reference-case-actions .text-button{font-size:11px}.reference-back{font-size:10px;margin-bottom:16px}.reference-back>.icon{transform:rotate(180deg);width:13px;height:13px}
