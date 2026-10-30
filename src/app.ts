@@ -305,7 +305,7 @@ function modalView() {
         '</div><button class="primary" data-action="submit-scramble">开始这道题 ' + icon("arrow") + '</button>' :
         '<p>观察 EO → 识别 LR → 想好解法。按空格揭晓，完成后标记掌握程度。</p><div class="shortcut-list"><div><span>揭晓 / 下一题</span><kbd>Space</kbd></div><div><span>重置初始打乱</span><kbd>Enter</kbd></div>' +
         '<div><span>U / U\'</span><kbd>J / F</kbd></div><div><span>M / M\'</span><kbd>K / I</kbd></div><div><span>U2 / M2</span><kbd>Shift + J / K</kbd></div><div><span>已掌握 / 还需练习</span><kbd>1 / 2</kbd></div><div><span>撤销一步</span><kbd>←</kbd></div></div>' +
-        '<div class="help-note">“聚焦 LR”保留其他色块的彩色边框，帮助你同时辨认 EO。答案对应初始打乱。</div>' +
+        '<div class="help-note">“聚焦 LR”高亮两块目标棱，并标记 L/R；其他色块淡化并保留颜色边框，便于判断 EO。答案对应初始打乱。</div>' +
         '<div class="credits"><a href="./NOTICE.md" target="_blank" rel="noreferrer">关于与致谢</a> · <a href="./LICENSE" target="_blank" rel="noreferrer">开源许可</a></div>') + '</section></div>';
 }
 function render() {

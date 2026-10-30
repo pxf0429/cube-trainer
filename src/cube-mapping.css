@@ -17,3 +17,21 @@
 @media(max-width:700px){.cube-stage{height:365px}.cube-stage .cube-rig{scale:.73}.cube-stage .cube-scene{transform:translateY(-30px)}}
 @media(max-width:380px){.cube-stage{height:345px}.cube-stage .cube-rig{scale:.68}}
 
+/* Focus follows the actual UL/UR pieces in every view. Keep a slim color
+   perimeter on the remaining stickers so EO and centers are still readable. */
+.cube-face .muted-sticker,.mapped-face .muted-sticker,.net-face .muted-sticker{
+    background:#d6dde5;border:2px solid var(--sticker);box-shadow:none;filter:saturate(.45);opacity:.65;
+}
+.cube-face .lr-target,.mapped-face .lr-target,.net-face .lr-target{
+    position:relative;background:var(--sticker);border:2px solid #172b45;
+    box-shadow:inset 0 0 0 2px #fff;opacity:1;filter:none;
+}
+.lr-target:after{
+    content:attr(data-lr);position:absolute;inset:0;display:grid;place-items:center;
+    width:17px;height:17px;margin:auto;background:#172b45;color:#fff;border-radius:3px;
+    font:700 12px/1 Consolas,monospace;pointer-events:none;
+}
+.net-face .lr-target:after{width:12px;height:12px;font-size:9px;border-radius:2px}
+.net-face .muted-sticker{border-width:1px}
+.net-face .lr-target{border-width:1px;box-shadow:inset 0 0 0 1px #fff}
+

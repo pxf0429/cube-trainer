@@ -1,17 +1,28 @@
 import { CubieCube, FaceletCube } from "./lib/CubeLib";
 import { CUBE_COLORS, DEFAULT_CUBE_COLORS, cubePalette } from "./lib/CubeColors";
+import { E } from "./lib/Defs";
 
 const names = ["U", "D", "F", "B", "L", "R"];
 const faceClasses = ["up", "down", "front", "back", "left", "right"];
 const faceNames = ["顶面 U", "底面 D", "正面 F", "背面 B", "左面 L", "右面 R"];
+const facelets = [FaceletCube.faces.u_face, FaceletCube.faces.d_face, FaceletCube.faces.f_face,
+    FaceletCube.faces.b_face, FaceletCube.faces.l_face, FaceletCube.faces.r_face];
 
 export function faceMarkup(cube: CubieCube, face: number, focusLR = false, palette = cubePalette(DEFAULT_CUBE_COLORS)): string {
     const stickers = FaceletCube.from_cubie(cube)[face];
-    return stickers.map((color, i) =>
-        '<span class="sticker ' + (focusLR && color !== 4 && color !== 5 ? 'muted-sticker' : '') +
+    return stickers.map((color, i) => {
+        const [position, , type] = facelets[face][i];
+        const piece = type === E ? cube.ep[position] : -1;
+        // Track the two LSE target pieces, including both stickers, rather than
+        // every sticker sharing a bridge color (corners, centers and solved edges).
+        const target = focusLR && (piece === 1 || piece === 3);
+        const label = target ? (piece === 1 ? 'L' : 'R') : '';
+        return '<span class="sticker ' + (focusLR ? (target ? 'lr-target' : 'muted-sticker') : '') +
+        (target ? '" data-lr="' + label : '') +
         '" style="--sticker:' + (CUBE_COLORS[palette[color]]?.hex || "#747b73") + '" aria-label="' +
-        (CUBE_COLORS[palette[color]]?.name || "未知颜色") + ' · ' + names[color] + (i === 4 ? ' 中心' : '') + '"></span>'
-    ).join("");
+        (CUBE_COLORS[palette[color]]?.name || "未知颜色") + ' · ' + names[color] + (i === 4 ? ' 中心' : '') +
+        (target ? '，目标 ' + label + ' 棱' : '') + '"></span>';
+    }).join("");
 }
 
 export function hiddenFaces(pitch: number, yaw: number): number[] {
