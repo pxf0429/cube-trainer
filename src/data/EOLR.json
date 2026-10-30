@@ -85,7 +85,7 @@
     "position": "UL/UF, UL/DF, UL/DB",
     "scramble": "M' U M U' M' U' M U2 M U M",
     "recognition": "LR棱在U层且相邻 或者 一个在U层，另一个在D层",
-    "solution": "如果一个LR棱在D层，调整U层使顶层的LR棱不在M层，做M操作使M层的LR棱在D层，调整U层LR棱到D层LR棱的对角线处，做M操作保持U层LR棱在U层，任意方向调整U层，撤销最后的M操作，解决LR用MC"
+    "solution": "做M操作使M层LR棱在U层，让侧边LR棱到M层LR棱对面，重复第一步M操作，转换为好1/1"
   },
   {
     "category": "4/2",

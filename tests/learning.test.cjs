@@ -9,9 +9,9 @@ const graph=buildLearningGraph(cases,CATEGORIES);
 
 test('every conversion in the original notes resolves to an existing case',()=>{
   const declarations=cases.reduce((sum,item)=>sum+(item.solution.match(/(?:转换|转化)为/g)||[]).length,0);
-  assert.equal(declarations,45);
+  assert.equal(declarations,46);
   assert.equal(graph.dependencies.filter(edge=>edge.conversion).length,declarations);
-  assert.equal(graph.dependencies.length,46);
+  assert.equal(graph.dependencies.length,47);
   for(const item of cases){
     for(const ref of caseReferences(item.solution,cases)){
       assert.ok(graph.byKey.has(ref.targetKey));
@@ -35,7 +35,7 @@ test('references resolve category-specific aliases without rewriting the notes',
   assert.deepEqual(caseReferences('转换为不存在3/1',cases),[]);
 });
 test('conversion totals separate cross-category and same-category references',()=>{
-  assert.equal(graph.crossCategoryCount,41);assert.equal(graph.withinCategoryCount,4);
+  assert.equal(graph.crossCategoryCount,42);assert.equal(graph.withinCategoryCount,4);
   assert.equal(graph.incoming('3/1'),31);
   assert.equal(graph.categoryEdges.find(edge=>edge.source==='1/1'&&edge.target==='3/1').count,7);
   assert.equal(graph.categoryEdges.find(edge=>edge.source==='2a/2'&&edge.target==='3/1').count,8);
