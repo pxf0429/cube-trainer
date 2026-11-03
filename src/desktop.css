@@ -94,12 +94,13 @@
 #bld-app #bld-encoding-form { border: 1px solid var(--desktop-border); padding: 8px; border-radius: 12px; background: #fff; gap: 8px; }
 #bld-app #bld-encoding-word { background: transparent; border: 0; border-radius: 5px; padding: 12px; }
 #bld-app #bld-encoding-form:focus-within { border-color: #668fbe; box-shadow: 0 0 0 2px #326bb212; }
-#bld-app #bld-encoding-word:focus-visible { outline-offset: 0; }
+#bld-app #bld-encoding-word:focus-visible { outline: none; }
 #bld-app .bld-editor { border: 1px solid var(--desktop-border); border-radius: 8px; }
 #bld-app .bld-word-card { border: 1px solid var(--desktop-border); border-radius: 8px; }
 #bld-app .bld-train-controls { background: #f0f4f9; border: 1px solid var(--desktop-border); }
 .module-eolr .history-card,.module-eolr .library-group { border: 1px solid var(--desktop-border); border-radius: 8px; }
 .page-footnote { border-color: var(--desktop-border); }
+@media(min-width:701px) { .workspace-content .page-footnote { display: none; } }
 .modal { border: 1px solid var(--desktop-border); border-radius: 12px; }
 .app-shell.sidebar-collapsed { grid-template-columns: 68px minmax(0,1fr); }
 .sidebar-collapsed .workspace-sidebar { padding: 22px 10px 14px; }
