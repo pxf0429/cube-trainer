@@ -200,3 +200,87 @@ button:disabled { cursor: default; }
   #bld-app .bld-start { min-height: 290px; padding-left: 0; padding-right: 0; }
   #bld-app .bld-train-controls { width: 100%; }
 }
+
+/* Detail reference: cubing.com in light mode. Keep the existing page layout. */
+:root {
+  --ink: #25364a;
+  --muted: #536378;
+  --paper-ink: #25364a;
+  --line: #d8e2ed;
+  --control-border: #c9d7e6;
+}
+.site-bar { border-bottom: 1px solid var(--line); }
+.site-bar .module-navigation button { font-size: 14px; padding: 10px 12px; }
+.site-bar .module-navigation button.active { color: #285994; font-weight: 600; }
+.site-bar .module-navigation button[data-module="bld"].active { color: #984b73; background: #f7e8f0; }
+.practice-home-center h1 { font-size: 20px; font-weight: 500; color: var(--ink); }
+.practice-home-actions button { font-size: 32px; color: #285994; }
+.practice-home-actions button:nth-child(2) { color: #984b73; }
+.practice-home-actions button span { font-size: 17px; }
+.module-eolr .page-tabs,#bld-app .page-tabs {
+  background: transparent; padding: 0; border-radius: 0; gap: 0;
+  border-bottom: 1px solid var(--line);
+}
+.module-eolr .page-tabs button,#bld-app .page-tabs button,#bld-app .page-tabs button:first-child {
+  min-height: 40px; padding: 10px 16px; font-size: 14px; border-radius: 4px 4px 0 0;
+}
+.module-eolr .page-tabs button.active,#bld-app .page-tabs button.active {
+  color: #285994; background: #edf4fc; font-weight: 600;
+}
+.module-eolr .page-tabs button.active:after,#bld-app .page-tabs button.active:after { height: 2px; background: #326bb2; }
+.module-eolr .page-tabs button:hover,#bld-app .page-tabs button:hover { background: #f1f6fc; color: #285994; }
+.primary,#bld-app .primary { font-size: 14px; font-weight: 600; border-radius: 6px; }
+.outline-button,.next-button { border-radius: 6px; background: #fff; border-color: var(--control-border); }
+.outline-button:hover,.next-button:hover:not(:disabled) { background: #f1f6fc; }
+.module-eolr .practice-toolbar .text-button,.module-eolr .session-footer .next-button,
+#bld-app .bld-encoding-top .text-button,#bld-app .bld-library-tools button { font-size: 12px; }
+.module-eolr .search-box,#bld-app .search-box { border-radius: 22px; background: #fff; border-color: var(--control-border); }
+.module-eolr .search-box input,#bld-app .search-box input { font-size: 14px; }
+.module-eolr .scramble-card { border-radius: 5px; background: #edf4fc; }
+.module-eolr .scramble-text { font-size: 16px; line-height: 1.8; }
+.module-eolr .cube-card,.module-eolr .answer-card { border-radius: 5px; background: #fff; }
+.module-eolr .cube-card-top,.module-eolr .answer-card .card-top { background: #fff; border-bottom: 1px solid var(--line); }
+.module-eolr .case-number,.module-eolr .card-top > span:first-child { font-size: 13px; letter-spacing: 0; }
+.module-eolr .cube-stage:before { opacity: .35; }
+.module-eolr .view-switch button { font-size: 11px; }
+.module-eolr .switch-label,.module-eolr .camera-actions button { font-size: 12px; }
+.module-eolr .answer-empty h3,.module-eolr .answer-revealed h2 { color: var(--ink); letter-spacing: 0; }
+.module-eolr .answer-empty > p,.module-eolr .answer-section p { color: var(--ink); font-size: 14px; line-height: 1.9; }
+.module-eolr .answer-empty > small { font-size: 11px; }
+.module-eolr .rating { font-size: 12px; border-radius: 4px; }
+.module-eolr .library-group,.module-eolr .history-card { border-radius: 5px; }
+.module-eolr .library-group-heading { background: #fff; border-bottom: 1px solid var(--line); }
+.module-eolr .library-group-heading h3 { color: #285994; }
+.module-eolr .library-columns { background: #f5f8fc; font-size: 12px; }
+.module-eolr .library-recognition,.module-eolr .library-solution { color: var(--ink); font-size: 14px; line-height: 1.9; }
+.module-eolr .library-entry-name { font-weight: 600; color: var(--ink); }
+.module-eolr .library-entry > summary:hover { background: #f1f6fc; }
+.module-eolr .case-reference { color: #285994; text-decoration-color: #85a8d3; }
+.module-eolr .case-reference:hover { color: #1b4579; text-decoration-color: currentColor; }
+.module-eolr th { font-size: 12px; color: var(--muted); }
+.module-eolr td { font-size: 13px; }
+.module-eolr .table-category b { color: var(--ink); }
+#bld-app input,#bld-app textarea,#bld-app select { color: var(--ink); }
+#bld-app .bld-range select,#bld-app .bld-train-controls select,#bld-app .bld-schema select { font-size: 13px; background: #fff; }
+#bld-app .bld-encoding-code { color: #285994; }
+#bld-app #bld-encoding-word { background: #fff; border-color: var(--control-border); }
+#bld-app .bld-mnemonic-suggestions button { background: #fff; border: 1px solid var(--control-border); color: #285994; font-size: 13px; }
+#bld-app .bld-mnemonic-suggestions button:hover { border-color: #c68aa8; background: #fcf1f6; color: #984b73; }
+#bld-app .bld-word-card,#bld-app .bld-editor { border-radius: 5px; }
+#bld-app .bld-word-body h3,#bld-app .bld-editor-title h2 { color: var(--ink); font-weight: 600; }
+#bld-app .bld-editor-fields label,#bld-app .bld-field { font-size: 13px; }
+.reference-case-body p { color: var(--ink); font-size: 14px; }
+@media(max-width:700px) {
+  .site-bar { padding-bottom: 14px; }
+  .site-bar .module-navigation button { font-size: 12px; padding: 9px; }
+  .practice-home-actions button { font-size: 30px; }
+  .practice-home-actions button span { font-size: 16px; }
+  .module-eolr .page-tabs button,#bld-app .page-tabs button,#bld-app .page-tabs button:first-child { font-size: 12px; padding: 9px 10px; }
+  .module-eolr .scramble-text { font-size: 13px; }
+  .module-eolr .cube-options { flex-wrap: wrap; gap: 12px; }
+  .module-eolr .camera-actions { gap: 12px; }
+  .module-eolr .switch-label,.module-eolr .camera-actions button { font-size: 11px; }
+  .module-eolr .library-recognition,.module-eolr .library-solution { font-size: 13px; }
+  .module-eolr td { font-size: 11px; }
+  #bld-app .bld-range select { font-size: 12px; }
+}
