@@ -14,8 +14,6 @@ const orderedCases = [...cases].sort((a, b) => learning.order.indexOf(a.category
 const app = document.querySelector<HTMLDivElement>("#app")!;
 const STORAGE_KEY = "eolr-studio:v1";
 const BACKGROUND_KEY = "cube-studio:background:v1";
-let sidebarCollapsed = false;
-try { sidebarCollapsed = localStorage.getItem("cube-studio:sidebar-collapsed") === "true"; } catch { /* Keep navigation visible. */ }
 const DEFAULT_BACKGROUND = { start: "#d8e9ff", end: "#f9dce9" };
 let background = { ...DEFAULT_BACKGROUND };
 try {
@@ -92,18 +90,17 @@ function statCards() {
 }
 function moduleNavigation() {
     return '<nav class="module-navigation" aria-label="训练项目">' + (["home", "eolr", "bld"] as const).map(module =>
-        '<button data-module="' + module + '" aria-label="' + ({ home: "训练首页", eolr: "EOLR 识别", bld: "盲拧记忆" }[module]) + '" class="' + (module === trainingModule ? "active" : "") + '" aria-current="' +
+        '<button data-module="' + module + '" class="' + (module === trainingModule ? "active" : "") + '" aria-current="' +
         (module === trainingModule ? "page" : "false") + '">' + icon(({ home: "home", eolr: "cube", bld: "memory" }[module])) +
         '<span>' + ({ home: "训练首页", eolr: "EOLR 识别", bld: "盲拧记忆" }[module]) + '</span>' + icon("chevron") + '</button>').join("") + '</nav>';
 }
 function sidebar() {
-    const brand = '<aside class="workspace-sidebar" id="workspace-sidebar"><header class="site-bar"><a class="brand" href="./" aria-label="魔方训练器首页"><span class="brand-symbol"><img class="brand-logo" src="./favicon.svg?v=2" width="36" height="36" alt="">' +
+    const brand = '<header class="site-bar"><a class="brand" href="./" aria-label="魔方训练器首页"><span class="brand-symbol"><img class="brand-logo" src="./favicon.svg?v=2" width="36" height="36" alt="">' +
         '</span><span>CUBE<span class="brand-sub">魔方训练器</span></span></a>' + moduleNavigation() + '</header>';
-    const footer = '<footer class="workspace-sidebar-footer"><a href="./NOTICE.md" target="_blank" rel="noreferrer">' + icon("help") + '<span>关于与许可</span></a></footer></aside>';
     if (trainingModule !== "eolr") {
-        return brand + footer;
+        return brand;
     }
-    return brand + '<div class="sidebar">' +
+    return brand + '<aside class="sidebar">' +
         '<div class="sidebar-caption">EO 分类索引</div><button class="category all-category ' +
         (stored.categories.length === 9 && !favoriteMode ? "active" : "") + '" data-action="all">' + icon("library") +
         '<span>全部大类</span><span class="count">51</span></button><div class="category-list" aria-label="选择EO大类">' +
@@ -114,11 +111,12 @@ function sidebar() {
         '" data-action="favorites" aria-pressed="' + favoriteMode + '">' + icon("star") + '<span>收藏复习</span><span class="count">' +
         availableFavorites().length + '</span></button>' + (activeCase ? '<div class="target-notice">正在定向练习<br><b>' +
         escape(activeCase.replace(":", " · ")) + '</b><button data-action="clear-target">取消定向 ' + icon("close") + '</button></div>' : "") +
-        '<div class="sidebar-bottom"><button class="help-link" data-action="help">' + icon("keyboard") + ' 使用说明与快捷键</button></div></div>' + footer;
+        '<div class="sidebar-bottom"><div class="sidebar-spec"><b>U / M</b><span>LAST SIX EDGES<br>9 大类 · 51 种情形</span></div>' +
+        '<button class="help-link" data-action="help">' + icon("help") + ' 使用说明与快捷键</button></div></aside>';
 }
 function homeView() {
     return '<section class="practice-home" aria-label="训练首页">' +
-        '<div class="practice-home-center"><h1>开始今天的练习</h1>' +
+        '<div class="practice-home-center"><h1>开始练习</h1>' +
         '<div class="practice-home-actions"><button data-module="eolr">EOLR <span>棱块识别</span>' + icon("arrow") + '</button>' +
         '<button data-module="bld">BLD <span>编码记忆</span>' + icon("arrow") + '</button></div></div>' +
         '<section class="background-settings" aria-label="背景颜色设置"><div class="background-settings-heading"><span>背景颜色</span>' +
@@ -312,12 +310,10 @@ function modalView() {
 }
 function render() {
     const expandedCases = new Set(Array.from(app.querySelectorAll<HTMLDetailsElement>('details[data-case-details][open]')).map(node=>node.dataset.caseDetails));
-    const pageName = trainingModule === "home" ? "训练首页" : trainingModule === "bld" ? "盲拧记忆" : ({ practice: "EOLR 识别", library: "情形图鉴", history: "练习记录" }[tab]);
-    app.innerHTML = '<div class="app-shell module-' + trainingModule + (sidebarCollapsed ? ' sidebar-collapsed' : '') + '">' + sidebar() + '<main><div class="workspace-titlebar"><button class="icon-button sidebar-toggle" data-action="toggle-sidebar" aria-label="' +
-        (sidebarCollapsed ? '展开侧栏' : '收起侧栏') + '" title="' + (sidebarCollapsed ? '展开侧栏' : '收起侧栏') + '" aria-expanded="' + !sidebarCollapsed + '" aria-controls="workspace-sidebar">' + icon("sidebar") + '</button><span>' + pageName + '</span></div><div class="workspace-content">' +
+    app.innerHTML = '<div class="app-shell module-' + trainingModule + '">' + sidebar() + '<main>' +
         (trainingModule === "home" ? homeView() : trainingModule === "bld" ? blindfold.markup() : header() +
         (tab === "practice" ? practiceView() : tab === "library" ? libraryView() : historyView()) +
-        '<footer class="page-footnote"><button data-action="help">使用说明与许可</button></footer>') + '</div></main></div>' + modalView();
+        '<footer class="page-footnote"><button data-action="help">使用说明与许可</button></footer>') + '</main></div>' + modalView();
     app.querySelectorAll<HTMLDetailsElement>('details[data-case-details]').forEach(node=>node.open=expandedCases.has(node.dataset.caseDetails));
     const bldRoot = app.querySelector<HTMLElement>("#bld-app"); if (bldRoot) blindfold.mount(bldRoot);
     updateTimer();
@@ -445,11 +441,6 @@ function initializeWorker() {
 app.addEventListener("click", async event => {
     const target = (event.target as Element).closest<HTMLElement>("button, a[data-case-reference]");
     if (!target || target.hasAttribute("disabled")) return;
-    if (target.dataset.action === "toggle-sidebar") {
-        sidebarCollapsed = !sidebarCollapsed;
-        try { localStorage.setItem("cube-studio:sidebar-collapsed", String(sidebarCollapsed)); } catch { /* The current layout still works. */ }
-        render(); app.querySelector<HTMLElement>('[data-action="toggle-sidebar"]')?.focus(); return;
-    }
     if (target.dataset.action === "reset-background") {
         background = { ...DEFAULT_BACKGROUND }; saveBackground(); render();
         app.querySelector<HTMLElement>('[data-action="reset-background"]')?.focus(); return;
