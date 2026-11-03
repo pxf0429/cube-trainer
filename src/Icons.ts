@@ -2,6 +2,7 @@
 // a small secondary shape, so icons remain readable at button size.
 const accent = 'var(--icon-accent, #e7a3bd)';
 const drawings: { [key: string]: string } = {
+    sidebar: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M5.5 8h1M5.5 12h1"/>',
     home: '<path d="m3 10 9-7 9 7M5 9v11h14V9M10 20v-7h4v7"/><path d="m12 3 5 3.9" stroke="' + accent + '" stroke-width="2.2"/>',
     memory: '<path d="M9 4a3 3 0 0 0-5 2.2 3.8 3.8 0 0 0-1 6.4A4.5 4.5 0 0 0 8 20h1V4Zm6 0a3 3 0 0 1 5 2.2 3.8 3.8 0 0 1 1 6.4A4.5 4.5 0 0 1 16 20h-1V4Z"/><path d="M5 9h4m-4 6h4m6-6h4m-4 6h4M9 12h6" stroke="' + accent + '"/>',
     image: '<rect x="3" y="3.5" width="18" height="17" rx="2"/><circle cx="8" cy="8.5" r="2" fill="' + accent + '" stroke="none"/><path d="m3 17 5-5 4 4 3-5 6 6"/>',
