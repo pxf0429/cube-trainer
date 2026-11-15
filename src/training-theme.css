@@ -201,6 +201,91 @@ button:disabled { cursor: default; }
   #bld-app .bld-train-controls { width: 100%; }
 }
 
+/* Foldable inner display: keep the two-column training surface comfortable
+   on a roughly √2:1 landscape canvas (the Pura X Max inner screen shape).
+   This sits between the desktop and phone rules so the same layout remains
+   useful when the browser is resized to a wide tablet window. */
+@media (orientation: landscape) and (min-aspect-ratio: 7/5) and (max-aspect-ratio: 3/2) and (min-width: 900px) {
+  .site-bar {
+    padding: 17px 28px 11px;
+    gap: 26px;
+  }
+  .app-shell > main {
+    max-width: none;
+  }
+  .module-eolr > main,
+  .module-bld > main {
+    max-width: none;
+    padding: 18px 28px 0;
+  }
+  .module-eolr > .sidebar {
+    padding: 18px 14px 20px;
+  }
+  .module-eolr .trainer-navigation,
+  #bld-app .trainer-navigation {
+    gap: 14px 24px;
+    margin-bottom: 18px;
+  }
+  .module-eolr .page-tabs,
+  #bld-app .page-tabs {
+    margin-bottom: 18px;
+  }
+
+  /* EOLR: reserve enough width for the answer card while keeping the cube
+     and its six-face projection readable at the shorter inner-screen height. */
+  .module-eolr .practice-grid {
+    grid-template-columns: minmax(0, 1.35fr) minmax(350px, .9fr);
+    gap: 14px;
+  }
+  .module-eolr .cube-stage {
+    min-height: 348px;
+  }
+  .module-eolr .cube-stage:has(>.cube-net) {
+    min-height: 0;
+    padding: 34px 18px 20px;
+  }
+  .module-eolr .cube-stage .cube-scene {
+    max-width: 430px;
+  }
+  .module-eolr .answer-card {
+    min-height: 410px;
+  }
+  .module-eolr .answer-revealed {
+    padding: 21px 24px;
+  }
+  .module-eolr .move-controls {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  /* BLD: use the available width for library cards, while keeping the
+     editor visible beside them on the inner display. */
+  #bld-app .bld-library-layout {
+    grid-template-columns: minmax(0, 1fr) 330px;
+    gap: 18px;
+  }
+  #bld-app .bld-word-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 11px;
+  }
+  #bld-app .bld-encoding {
+    min-height: 410px;
+  }
+  #bld-app .bld-encoding-code {
+    font-size: clamp(68px, 7vw, 92px);
+    padding-top: 40px;
+  }
+  #bld-app .bld-sequence-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+  #bld-app .bld-letter-net {
+    transform: scale(.9);
+    transform-origin: top center;
+    margin-bottom: -25px;
+  }
+}
+
 /* Detail reference: cubing.com in light mode. Keep the existing page layout. */
 :root {
   --ink: #25364a;
