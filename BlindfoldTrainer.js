@@ -1,7 +1,7 @@
-import { icon } from "./Icons.js?v=b073598e48f7";
-import { DEMO_WORDS, activeAlphabet, displayCode, eligibleEntry, importBLD, loadBLDStore, makeEntry, matchesWord, mergeEntries, parseBulkEntries, parseCode, parseLetters, reviewEntry, safeImageUrl, schemaLetters, learnMnemonic, randomCode, availableCodes } from "./lib/Blindfold.js?v=b073598e48f7";
-import { searchMemoryImages } from "./lib/MemoryImages.js?v=b073598e48f7";
-import { mnemonicImages, mnemonicWords } from "./lib/MnemonicCandidates.js?v=b073598e48f7";
+import { icon } from "./Icons.js?v=df131c94b7a3";
+import { DEMO_WORDS, activeAlphabet, displayCode, eligibleEntry, importBLD, loadBLDStore, makeEntry, matchesWord, mergeEntries, parseBulkEntries, parseCode, parseLetters, reviewEntry, safeImageUrl, schemaLetters, learnMnemonic, randomCode, availableCodes } from "./lib/Blindfold.js?v=df131c94b7a3";
+import { searchMemoryImages } from "./lib/MemoryImages.js?v=df131c94b7a3";
+import { mnemonicImages, mnemonicWords } from "./lib/MnemonicCandidates.js?v=df131c94b7a3";
 const entities = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
 const esc = (value) => String(value).replace(/[&<>"']/g, char => entities[char]);
 const labels = { general: "通用", edge: "棱块", corner: "角块" };

@@ -1,4 +1,4 @@
-import { LSEEngine } from "./lib/LSEEngine.js?v=b073598e48f7";
+import { LSEEngine } from "./lib/LSEEngine.js?v=df131c94b7a3";
 let engine;
 const channel = self;
 channel.onmessage = (event) => {
