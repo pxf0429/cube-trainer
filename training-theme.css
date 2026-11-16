@@ -462,6 +462,20 @@ button:disabled { cursor: default; }
   border-color: var(--line);
   border-radius: 5px;
 }
+/* The tab row can still scroll on narrow screens, but its native scrollbar
+   should not become a stray up/down control beside the tabs. */
+.module-eolr .page-tabs,
+#bld-app .page-tabs {
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.module-eolr .page-tabs::-webkit-scrollbar,
+#bld-app .page-tabs::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
 @media(max-width:700px) {
   #bld-app .bld-encoding { padding: 0 17px 22px; }
   #bld-app .bld-encoding-result { padding: 16px; }
