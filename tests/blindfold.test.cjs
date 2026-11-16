@@ -16,6 +16,18 @@ test('the first-page random codes cover empty dictionaries and obey piece exclus
   store.group='edge'; assert.equal(availableCodes(store).length,528);
   assert.equal(availableCodes(store).includes('C I'),false);
 });
+test('the Chichu scheme excludes U and V from every practice group', () => {
+  const store = loadBLDStore(null);
+  store.scheme = 'chichu';
+  for (const group of ['general', 'edge', 'corner']) {
+    store.group = group;
+    const codes = availableCodes(store);
+    assert.equal(codes.some(code => code.split(' ').some(letter => letter === 'U' || letter === 'V')), false);
+  }
+  store.scheme = 'speffz'; store.group = 'general';
+  assert.equal(availableCodes(store).length, 676);
+  assert.ok(availableCodes(store).includes('U V'));
+});
 test('submitted mnemonic words are saved once and reuse images across codes', () => {
   const store=loadBLDStore(null);
   const first=learnMnemonic(store,'AB','鸡蛋');
