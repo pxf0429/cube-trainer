@@ -369,3 +369,102 @@ button:disabled { cursor: default; }
   .module-eolr td { font-size: 11px; }
   #bld-app .bld-range select { font-size: 12px; }
 }
+
+/* Keep BLD on the same visual contract as EOLR: white content surfaces,
+   the shared fine border, and the same small control radius. */
+#bld-app .bld-range {
+  min-height: 40px;
+  padding: 0 0 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+#bld-app .bld-range > label { gap: 10px; }
+#bld-app .bld-range select,
+#bld-app .bld-train-controls select,
+#bld-app .bld-schema select,
+#bld-app .bld-editor select {
+  border-radius: 5px;
+  border-color: var(--control-border);
+  background: #fff;
+}
+#bld-app .bld-notice {
+  border: 1px solid #e5bfd2;
+  border-radius: 5px;
+  background: #fcf2f7;
+  color: var(--ink);
+}
+#bld-app .bld-encoding {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fff;
+  padding: 0 24px 26px;
+}
+#bld-app .bld-encoding-top { border-color: var(--line); }
+#bld-app .bld-encoding-result {
+  background: #f5f8fc;
+  border-color: var(--line);
+  border-radius: 5px;
+  padding: 20px;
+}
+#bld-app .bld-encoding-last {
+  border-color: var(--line);
+  margin-left: 0;
+  margin-right: 0;
+}
+#bld-app .bld-library-tools { margin-bottom: 18px; }
+#bld-app .bld-library-tools .outline-button {
+  border-color: var(--control-border);
+  background: #fff;
+  border-radius: 6px;
+}
+#bld-app .bld-word-card,
+#bld-app .bld-editor,
+#bld-app .bld-bulk,
+#bld-app .bld-empty,
+#bld-app .bld-start,
+#bld-app .bld-recall,
+#bld-app .bld-sequence,
+#bld-app .bld-schema {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+#bld-app .bld-word-card .bld-image,
+#bld-app .bld-editor .large-image { background: #edf4fc; }
+#bld-app .bld-editor { padding: 20px; }
+#bld-app .bld-editor-title { border-bottom: 1px solid var(--line); padding-bottom: 14px; }
+#bld-app .bld-train-controls {
+  background: #edf4fc;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+#bld-app .bld-sequence-grid article {
+  background: #f5f8fc;
+  border-color: var(--line);
+  border-radius: 4px;
+}
+#bld-app .bld-answer-result {
+  background: #f5f8fc;
+  border-color: var(--line);
+  border-radius: 5px;
+}
+#bld-app .bld-answer-result.incorrect {
+  background: #fcf2f7;
+  border-color: #e5bfd2;
+}
+#bld-app .bld-schema { padding: 24px; }
+#bld-app .bld-letter-face {
+  background: #edf4fc;
+  border-color: #c9d7e6;
+  border-radius: 4px;
+}
+#bld-app .bld-matrix-wrap {
+  border-color: var(--line);
+  border-radius: 5px;
+}
+@media(max-width:700px) {
+  #bld-app .bld-encoding { padding: 0 17px 22px; }
+  #bld-app .bld-encoding-result { padding: 16px; }
+  #bld-app .bld-editor { padding: 18px 16px; }
+  #bld-app .bld-schema { padding: 18px 14px; }
+}

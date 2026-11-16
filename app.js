@@ -1,11 +1,11 @@
-import casesJson from "./data/EOLR.js?v=f57fdb15575c";
-import { CubieCube } from "./lib/CubeLib.js?v=f57fdb15575c";
-import { CATEGORIES, EO_PATTERNS, hasAlignedCenters, keyForCase, loadStored, parseScramble, summarize } from "./lib/Practice.js?v=f57fdb15575c";
-import { cubeMarkup, hiddenFaces, mappedFacesMarkup } from "./CubeView.js?v=f57fdb15575c";
-import { icon } from "./Icons.js?v=f57fdb15575c";
-import { CUBE_COLORS, DEFAULT_CUBE_COLORS, changeCubeColor, cubePalette } from "./lib/CubeColors.js?v=f57fdb15575c";
-import { BlindfoldTrainer } from "./BlindfoldTrainer.js?v=f57fdb15575c";
-import { buildLearningGraph } from "./lib/EOLRLearning.js?v=f57fdb15575c";
+import casesJson from "./data/EOLR.js?v=eb3b30c7c373";
+import { CubieCube } from "./lib/CubeLib.js?v=eb3b30c7c373";
+import { CATEGORIES, EO_PATTERNS, hasAlignedCenters, keyForCase, loadStored, parseScramble, summarize } from "./lib/Practice.js?v=eb3b30c7c373";
+import { cubeMarkup, hiddenFaces, mappedFacesMarkup } from "./CubeView.js?v=eb3b30c7c373";
+import { icon } from "./Icons.js?v=eb3b30c7c373";
+import { CUBE_COLORS, DEFAULT_CUBE_COLORS, changeCubeColor, cubePalette } from "./lib/CubeColors.js?v=eb3b30c7c373";
+import { BlindfoldTrainer } from "./BlindfoldTrainer.js?v=eb3b30c7c373";
+import { buildLearningGraph } from "./lib/EOLRLearning.js?v=eb3b30c7c373";
 const cases = casesJson;
 const learning = buildLearningGraph(cases, CATEGORIES);
 const orderedCases = [...cases].sort((a, b) => learning.order.indexOf(a.category) - learning.order.indexOf(b.category));
@@ -475,7 +475,7 @@ function initializeWorker() {
     busy = true;
     errorMessage = "";
     render();
-    worker = new Worker("./generator.worker.js?v=f57fdb15575c", { type: "module" });
+    worker = new Worker("./generator.worker.js?v=eb3b30c7c373", { type: "module" });
     worker.onmessage = event => {
         const message = event.data;
         if (message.type === "ready") {

@@ -1,6 +1,6 @@
-import { FaceletCube } from "./lib/CubeLib.js?v=f57fdb15575c";
-import { CUBE_COLORS, DEFAULT_CUBE_COLORS, cubePalette } from "./lib/CubeColors.js?v=f57fdb15575c";
-import { E } from "./lib/Defs.js?v=f57fdb15575c";
+import { FaceletCube } from "./lib/CubeLib.js?v=eb3b30c7c373";
+import { CUBE_COLORS, DEFAULT_CUBE_COLORS, cubePalette } from "./lib/CubeColors.js?v=eb3b30c7c373";
+import { E } from "./lib/Defs.js?v=eb3b30c7c373";
 const names = ["U", "D", "F", "B", "L", "R"];
 const faceClasses = ["up", "down", "front", "back", "left", "right"];
 const faceNames = ["顶面 U", "底面 D", "正面 F", "背面 B", "左面 L", "右面 R"];
