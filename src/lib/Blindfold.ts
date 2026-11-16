@@ -92,6 +92,7 @@ export function activeAlphabet(store: BLDStore): string[] {
 export function eligibleEntry(entry: BLDEntry, store: BLDStore): boolean {
     if (store.group !== "general" && entry.group !== "general" && entry.group !== store.group) return false;
     const [a, b] = entry.code.split(" ");
+    if (a === b) return false;
     if (store.group === "general") { const alphabet = activeAlphabet(store); return alphabet.includes(a) && alphabet.includes(b); }
     const letters = schemaLetters(store, store.group), first = letters.indexOf(a), second = letters.indexOf(b);
     const size = store.group === "corner" ? 3 : 2;
@@ -110,13 +111,19 @@ export function availableCodes(store: BLDStore): string[] {
     const grouped = store.group === "general" ? null : schemaLetters(store, store.group);
     const size = store.group === "corner" ? 3 : 2;
     for (const a of letters) for (const b of letters) {
+        if (a === b) continue;
         if (!grouped || Math.floor(grouped.indexOf(a) / size) !== Math.floor(grouped.indexOf(b) / size)) codes.push(a + " " + b);
     }
     return codes;
 }
+export function unmemorizedCodes(store: BLDStore): string[] {
+    const memorized = new Set(store.entries.filter(entry => eligibleEntry(entry, store)).map(entry => entry.code));
+    return availableCodes(store).filter(code => !memorized.has(code));
+}
 export function randomCode(store: BLDStore, previous = ""): string {
-    const codes = availableCodes(store).filter(code => code !== previous);
-    return codes[Math.floor(Math.random() * codes.length)];
+    const remaining = unmemorizedCodes(store), alternatives = remaining.filter(code => code !== previous);
+    const codes = alternatives.length ? alternatives : remaining;
+    return codes.length ? codes[Math.floor(Math.random() * codes.length)] : "";
 }
 export function learnMnemonic(store: BLDStore, code: string, text: string): { entry: BLDEntry; existing: boolean; reusedImage: boolean } {
     const normalizedCode = parseCode(code), word = text.trim();

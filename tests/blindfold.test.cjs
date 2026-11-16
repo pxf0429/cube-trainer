@@ -5,11 +5,12 @@ const { parseCode, displayCode, parseLetters, loadBLDStore, makeEntry, eligibleE
   importBLD, parseBulkEntries, mergeEntries, safeImageUrl, sanitizeImage, SPEFFZ_CORNERS, SPEFFZ_EDGES } = require('../src/lib/Blindfold.ts');
 const { parseImageResults } = require('../src/lib/MemoryImages.ts');
 const { allowedUrl } = require('../scripts/memory-images.cjs');
-const { availableCodes, randomCode, learnMnemonic } = require('../src/lib/Blindfold.ts');
+const { availableCodes, unmemorizedCodes, randomCode, learnMnemonic } = require('../src/lib/Blindfold.ts');
 
 test('the first-page random codes cover empty dictionaries and obey piece exclusions', () => {
   const store=loadBLDStore(null);
-  assert.equal(availableCodes(store).length,676);
+  assert.equal(availableCodes(store).length,650);
+  assert.equal(availableCodes(store).includes('A A'),false);
   const first=randomCode(store); assert.ok(first); assert.notEqual(randomCode(store,first),first);
   store.group='corner'; assert.equal(availableCodes(store).length,504);
   assert.equal(availableCodes(store).includes('D I'),false);
@@ -25,8 +26,35 @@ test('the Chichu scheme excludes U and V from every practice group', () => {
     assert.equal(codes.some(code => code.split(' ').some(letter => letter === 'U' || letter === 'V')), false);
   }
   store.scheme = 'speffz'; store.group = 'general';
-  assert.equal(availableCodes(store).length, 676);
+  assert.equal(availableCodes(store).length, 650);
   assert.ok(availableCodes(store).includes('U V'));
+});
+test('encoding memory skips saved words and never offers repeated-letter pairs', () => {
+  const store = loadBLDStore(null);
+  const saved = learnMnemonic(store, 'AB', '已有词').entry;
+  assert.equal(unmemorizedCodes(store).includes('A B'), false);
+  assert.equal(unmemorizedCodes(store).includes('A A'), false);
+  assert.notEqual(randomCode(store), saved.code);
+  learnMnemonic(store, 'CD', '另一个词');
+  assert.equal(unmemorizedCodes(store).includes('C D'), false);
+  assert.equal(eligibleEntry(makeEntry('AA', '旧词'), store), false);
+  assert.equal(store.entries.length, 2);
+});
+test('encoding memory handles the final remaining code and completion without repeating saved codes', () => {
+  const store = loadBLDStore(null), codes = availableCodes(store);
+  store.entries = codes.slice(1).map(code => makeEntry(code, '已录入'));
+  assert.equal(randomCode(store, codes[0]), codes[0]);
+  learnMnemonic(store, codes[0], '最后一个');
+  assert.deepEqual(unmemorizedCodes(store), []);
+  assert.equal(randomCode(store), '');
+});
+test('saved code exclusion follows the selected entry group', () => {
+  const store = loadBLDStore(null);
+  store.entries = [makeEntry('CD', '角块词', 'corner')];
+  store.group = 'edge';
+  assert.ok(unmemorizedCodes(store).includes('C D'));
+  store.entries.push(makeEntry('CD', '通用词'));
+  assert.equal(unmemorizedCodes(store).includes('C D'), false);
 });
 test('submitted mnemonic words are saved once and reuse images across codes', () => {
   const store=loadBLDStore(null);

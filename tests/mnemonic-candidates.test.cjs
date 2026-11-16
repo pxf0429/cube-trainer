@@ -6,7 +6,7 @@ const path = require('node:path');
 const reference = require('../src/data/BLDCandidates.json');
 const pictures = require('../src/data/BLDCandidateImages.json');
 const { mnemonicWords, mnemonicImages } = require('../src/lib/MnemonicCandidates.ts');
-const { loadBLDStore, learnMnemonic, sanitizeImage } = require('../src/lib/Blindfold.ts');
+const { loadBLDStore, learnMnemonic, sanitizeImage, availableCodes, makeEntry } = require('../src/lib/Blindfold.ts');
 const { BlindfoldTrainer } = require('../src/BlindfoldTrainer.ts');
 
 test('the reference retains the workbook grid, orientation and original words', () => {
@@ -82,4 +82,25 @@ test('submitting a reference word uses prepared images without a network search'
     assert.ok(trainer.markup().includes('./assets/memory/'));
     assert.equal(trainer.store.entries.length, 1);
   } finally { global.fetch = originalFetch; }
+});
+
+test('returning from the library replaces an input code that was already recorded', () => {
+  const trainer = new BlindfoldTrainer(() => {}, () => {});
+  trainer.focus = () => {};
+  trainer.encoding.code = 'G D';
+  learnMnemonic(trainer.store, 'GD', '果冻');
+  trainer.click({ target: { closest: () => ({ dataset: { bldView: 'encode' }, hasAttribute: () => false }) } });
+  assert.notEqual(trainer.encoding.code, 'G D');
+  assert.ok(trainer.encoding.code);
+});
+
+test('the final recorded code leads to a completion message with no blank input form', () => {
+  const trainer = new BlindfoldTrainer(() => {}, () => {});
+  trainer.focus = () => {};
+  trainer.store.entries = availableCodes(trainer.store).map(code => makeEntry(code, '已录入'));
+  trainer.nextEncoding();
+  const html = trainer.markup();
+  assert.ok(html.includes('当前范围的编码已全部录入'));
+  assert.ok(html.includes('0 组未录入编码'));
+  assert.ok(!html.includes('id="bld-encoding-form"'));
 });
