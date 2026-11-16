@@ -1,7 +1,7 @@
-import { icon } from "./Icons.js?v=df131c94b7a3";
-import { DEMO_WORDS, activeAlphabet, displayCode, eligibleEntry, importBLD, loadBLDStore, makeEntry, matchesWord, mergeEntries, parseBulkEntries, parseCode, parseLetters, reviewEntry, safeImageUrl, schemaLetters, learnMnemonic, randomCode, availableCodes } from "./lib/Blindfold.js?v=df131c94b7a3";
-import { searchMemoryImages } from "./lib/MemoryImages.js?v=df131c94b7a3";
-import { mnemonicImages, mnemonicWords } from "./lib/MnemonicCandidates.js?v=df131c94b7a3";
+import { icon } from "./Icons.js?v=f8d64e55bc0a";
+import { DEMO_WORDS, activeAlphabet, displayCode, eligibleEntry, importBLD, loadBLDStore, makeEntry, matchesWord, mergeEntries, parseBulkEntries, parseCode, parseLetters, reviewEntry, safeImageUrl, schemaLetters, learnMnemonic, randomCode, unmemorizedCodes } from "./lib/Blindfold.js?v=f8d64e55bc0a";
+import { searchMemoryImages } from "./lib/MemoryImages.js?v=f8d64e55bc0a";
+import { mnemonicImages, mnemonicWords } from "./lib/MnemonicCandidates.js?v=f8d64e55bc0a";
 const entities = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
 const esc = (value) => String(value).replace(/[&<>"']/g, char => entities[char]);
 const labels = { general: "通用", edge: "棱块", corner: "角块" };
@@ -108,13 +108,15 @@ export class BlindfoldTrainer {
         return '<div id="bld-app">' + this.header() + '<div class="bld-range"><label>练习范围 <select id="bld-group" aria-label="盲拧练习范围">' +
             ["general", "edge", "corner"].map(group => '<option value="' + group + '" ' + (group === this.store.group ? "selected" : "") + '>' +
                 (group === "general" ? "通用 · 全部编码" : labels[group] + " · 排除同块编码") + '</option>').join("") + '</select></label><span>' +
-            ({ speffz: "Speffz", chichu: "彳亍", custom: "自定义" }[this.store.scheme]) + ' / ' + (this.view === "encode" ? availableCodes(this.store).length + ' 组随机编码' : this.pool().length + ' 个可练词') + '</span></div>' +
+            ({ speffz: "Speffz", chichu: "彳亍", custom: "自定义" }[this.store.scheme]) + ' / ' + (this.view === "encode" ? unmemorizedCodes(this.store).length + ' 组未录入编码' : this.pool().length + ' 个可练词') + '</span></div>' +
             (this.notice ? '<div class="bld-notice" role="status">' + esc(this.notice) + (this.deleted ? '<button data-bld-action="undo-delete">撤销删除</button>' : '') + '</div>' : '') +
             (this.view === "encode" ? this.encodingView() : this.view === "library" ? this.library() : this.view === "schema" ? this.schema() : this.training()) +
             '<footer class="page-footnote"><a href="./NOTICE.md" target="_blank" rel="noreferrer">关于与许可</a></footer></div>';
     }
     encodingView() {
         const q = this.encoding, entry = this.store.entries.find(e => e.id === q.entryId), submitted = q.phase !== "input", words = mnemonicWords(q.code);
+        if (!q.code)
+            return '<section class="bld-empty"><span class="empty-icon">' + icon("check") + '</span><h2>当前范围的编码已全部录入</h2><p>到记忆练习巩固这些联想词。</p><button class="outline-button" data-bld-view="train">开始记忆练习</button></section>';
         const status = q.phase === "searching" ? "正在查找配图…" : this.encodingChoosing ? "选择对应的图片" : q.error ? "配图暂未找到，可重新搜索" : q.reused ? "已载入配图" : entry?.image ? "配图已保存" : "联想词已保存";
         return '<section class="bld-encoding ' + (submitted ? 'has-result' : '') + '"><div class="bld-encoding-top"><span>' + icon("memory") + ' 输入联想词</span><button class="text-button" data-bld-action="next-encoding">' +
             (submitted ? "下一组" : "换一组") + ' ' + icon("arrow") + '</button></div><div class="bld-encoding-main"><div class="bld-encoding-code">' + esc(displayCode(q.code)) + '</div>' +
@@ -146,7 +148,7 @@ export class BlindfoldTrainer {
     }
     async submitEncoding(retry = false, replace = false) {
         const q = this.encoding;
-        if (q.phase === "searching" || (!retry && q.phase !== "input"))
+        if (!q.code || q.phase === "searching" || (!retry && q.phase !== "input"))
             return;
         try {
             const result = learnMnemonic(this.store, q.code, q.word);
@@ -261,6 +263,8 @@ export class BlindfoldTrainer {
         this.store.entries.filter(e => this.store.group === "general" || e.group === "general" || e.group === this.store.group).forEach(entry => byCode.set(entry.code, [...(byCode.get(entry.code) || []), entry]));
         return '<p class="bld-small-note">行是第一个编码，列是第二个编码；点击格子可录入或编辑。</p><div class="bld-matrix-wrap"><table class="bld-matrix"><thead><tr><th></th>' +
             letters.map(l => '<th>' + esc(l) + '</th>').join("") + '</tr></thead><tbody>' + letters.map(a => '<tr><th>' + esc(a) + '</th>' + letters.map(b => {
+            if (a === b)
+                return '<td aria-label="相同编码">—</td>';
             const rows = byCode.get(a + " " + b) || [];
             return '<td><button data-bld-pair="' + esc(a + " " + b) + '" aria-label="编辑' + esc(a + " " + b) + '" class="' + (rows.length ? 'filled' : '') + '">' + esc(rows.map(e => e.word).join(" / ")) + '</button></td>';
         }).join("") + '</tr>').join("") + '</tbody></table></div>';
@@ -535,6 +539,10 @@ export class BlindfoldTrainer {
         if (target.dataset.bldView) {
             this.view = target.dataset.bldView;
             this.notice = "";
+            if (this.view === "encode" && this.encoding.phase === "input" && !unmemorizedCodes(this.store).includes(this.encoding.code)) {
+                this.nextEncoding();
+                return;
+            }
             this.rerender();
             if (this.view === "encode")
                 this.focus("#bld-encoding-word");
